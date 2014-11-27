@@ -15,15 +15,6 @@
  */
 package com.google.gwt.uibinder.rebind;
 
-import com.google.gwt.core.ext.UnableToCompleteException;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.uibinder.attributeparsers.FieldReferenceConverter;
-import com.google.gwt.uibinder.rebind.model.ImplicitCssResource;
-import com.google.gwt.uibinder.rebind.model.OwnerClass;
-import com.google.gwt.uibinder.rebind.model.OwnerField;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -32,6 +23,15 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JType;
+import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.uibinder.attributeparsers.FieldReferenceConverter;
+import com.google.gwt.uibinder.rebind.model.ImplicitCssResource;
+import com.google.gwt.uibinder.rebind.model.OwnerClass;
+import com.google.gwt.uibinder.rebind.model.OwnerField;
 
 /**
  * This class handles all {@link FieldWriter} instances created for the current
