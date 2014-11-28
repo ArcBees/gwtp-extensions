@@ -33,7 +33,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
-import com.gwtplatform.dispatch.rest.client.ResourceDelegate;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.dispatch.rest.rebind.AbstractVelocityGenerator;
 import com.gwtplatform.dispatch.rest.rebind.GeneratorWithInput;
 import com.gwtplatform.dispatch.rest.rebind.events.RegisterGinBindingEvent;
