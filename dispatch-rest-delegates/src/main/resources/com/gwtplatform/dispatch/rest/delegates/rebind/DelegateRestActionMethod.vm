@@ -1,0 +1,4 @@
+    RestAction<$resultType> ${actionMethodName}(#generateMethodSignature($methodParameters)) {
+        return new ${action.className}(defaultDateFormat#foreach ($param in $actionParameters),
+                $param.variableName#end);
+    }
