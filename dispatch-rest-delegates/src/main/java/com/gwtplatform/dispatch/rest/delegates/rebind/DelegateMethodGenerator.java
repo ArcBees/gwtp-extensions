@@ -63,7 +63,7 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
     }
 
     @Override
-    public boolean canGenerate(MethodContext methodContext) throws UnableToCompleteException {
+    public boolean canGenerate(MethodContext methodContext) {
         setContext(methodContext);
 
         JType returnType = getMethod().getReturnType();

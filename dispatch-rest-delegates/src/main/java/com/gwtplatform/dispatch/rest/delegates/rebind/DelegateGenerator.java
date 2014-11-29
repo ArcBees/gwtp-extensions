@@ -41,9 +41,10 @@ import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodGenerator;
 import com.gwtplatform.dispatch.rest.rebind.resource.ResourceDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
-import com.gwtplatform.dispatch.rest.rebind.utils.Generators;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
+
+import static com.gwtplatform.dispatch.rest.rebind.utils.Generators.findGenerator;
 
 public class DelegateGenerator extends AbstractVelocityGenerator
         implements GeneratorWithInput<ResourceDefinition, DelegateDefinition> {
@@ -72,7 +73,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
     }
 
     @Override
-    public boolean canGenerate(ResourceDefinition resourceDefinition) throws UnableToCompleteException {
+    public boolean canGenerate(ResourceDefinition resourceDefinition) {
         this.resourceDefinition = resourceDefinition;
 
         return findType(getClassDefinition().getQualifiedName()) == null;
@@ -132,7 +133,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
     private void generateMethod(MethodDefinition methodDefinition) throws UnableToCompleteException {
         DelegatedMethodContext context = new DelegatedMethodContext(resourceDefinition, methodDefinition);
-        MethodGenerator generator = Generators.findGenerator(getLogger(), methodGenerators, context);
+        MethodGenerator generator = findGenerator(methodGenerators, context);
 
         if (generator != null) {
             MethodDefinition delegatedDefinition = generator.generate(context);

@@ -48,7 +48,7 @@ public class DelegateExtensionGenerator extends AbstractGenerator implements Ext
     }
 
     @Override
-    public boolean canGenerate(ExtensionContext context) throws UnableToCompleteException {
+    public boolean canGenerate(ExtensionContext context) {
         return context.getExtensionPoint() == ExtensionPoint.AFTER_RESOURCES
                 && !context.getResourceDefinitions().isEmpty();
     }
