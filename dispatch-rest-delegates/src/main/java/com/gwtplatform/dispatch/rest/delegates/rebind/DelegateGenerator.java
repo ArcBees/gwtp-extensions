@@ -119,7 +119,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
     protected void populateTemplateVariables(Map<String, Object> variables) {
         JClassType resourceInterface = resourceDefinition.getResourceInterface();
 
-        variables.put("resourceType", resourceInterface.getSimpleSourceName());
+        variables.put("resourceType", new ClassDefinition(resourceInterface).getParameterizedClassName());
         variables.put("methods", methodDefinitions);
         variables.put("imports", imports);
     }
