@@ -154,11 +154,14 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
     }
 
     private JClassType convertPrimitiveToBoxed(JPrimitiveType primitive) throws UnableToCompleteException {
+        JClassType boxedType = null;
         try {
             String boxedSourceName = primitive.getQualifiedBoxedSourceName();
-            return getContext().getTypeOracle().parse(boxedSourceName).isClass();
+            boxedType = getContext().getTypeOracle().parse(boxedSourceName).isClass();
         } catch (TypeOracleException e) {
-            return getLogger().die("Unable to convert '" + primitive + "' to a boxed type.");
+            getLogger().die("Unable to convert '%s' to a boxed type.", primitive);
         }
+
+        return boxedType;
     }
 }
