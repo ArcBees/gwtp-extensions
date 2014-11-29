@@ -17,13 +17,17 @@
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
 import com.google.inject.AbstractModule;
-import com.gwtplatform.dispatch.rest.rebind.extension.ExtensionModule;
-import com.gwtplatform.dispatch.rest.rebind.resource.ResourceModule;
+
+import static com.gwtplatform.dispatch.rest.rebind.extension.ExtensionModule.addExtensionGenerator;
+import static com.gwtplatform.dispatch.rest.rebind.resource.ResourceModule.addMethodGenerator;
 
 public class DelegateModule extends AbstractModule {
     @Override
     protected void configure() {
-        ResourceModule.addResourceMethodGenerator(binder()).to(DelegateMethodGenerator.class);
-        ExtensionModule.addExtensionGenerator(binder()).to(DelegateExtensionGenerator.class);
+        addExtensionGenerator(binder()).to(DelegateExtensionGenerator.class);
+        addMethodGenerator(binder()).to(DelegateMethodGenerator.class);
+        addMethodGenerator(binder()).to(DelegatedDelegateMethodGenerator.class);
+        addMethodGenerator(binder()).to(DelegatedActionMethodGenerator.class);
+        addMethodGenerator(binder()).to(DelegatedSubResourceMethodGenerator.class);
     }
 }

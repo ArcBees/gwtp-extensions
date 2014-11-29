@@ -35,15 +35,15 @@ import com.gwtplatform.dispatch.rest.rebind.Parameter;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionContext;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionDefinition;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionGenerator;
-import com.gwtplatform.dispatch.rest.rebind.resource.AbstractResourceMethodGenerator;
+import com.gwtplatform.dispatch.rest.rebind.resource.AbstractMethodGenerator;
+import com.gwtplatform.dispatch.rest.rebind.resource.MethodContext;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
-import com.gwtplatform.dispatch.rest.rebind.resource.ResourceMethodContext;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 
 import static com.gwtplatform.dispatch.rest.rebind.utils.Generators.getGenerator;
 
-public class DelegateMethodGenerator extends AbstractResourceMethodGenerator {
+public class DelegateMethodGenerator extends AbstractMethodGenerator {
     private static final String TEMPLATE_ACTION =
             "com/gwtplatform/dispatch/rest/delegates/rebind/DelegateRestActionMethod.vm";
     private static final String TEMPLATE_STUB =
@@ -67,7 +67,7 @@ public class DelegateMethodGenerator extends AbstractResourceMethodGenerator {
     }
 
     @Override
-    public boolean canGenerate(ResourceMethodContext methodContext) throws UnableToCompleteException {
+    public boolean canGenerate(MethodContext methodContext) throws UnableToCompleteException {
         setContext(methodContext);
 
         JType returnType = getMethod().getReturnType();
@@ -77,7 +77,7 @@ public class DelegateMethodGenerator extends AbstractResourceMethodGenerator {
     }
 
     @Override
-    public MethodDefinition generate(ResourceMethodContext methodContext) throws UnableToCompleteException {
+    public MethodDefinition generate(MethodContext methodContext) throws UnableToCompleteException {
         setContext(methodContext);
 
         List<Parameter> parameters = resolveParameters();

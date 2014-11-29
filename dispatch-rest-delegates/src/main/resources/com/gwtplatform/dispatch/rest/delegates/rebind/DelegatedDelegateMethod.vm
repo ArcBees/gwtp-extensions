@@ -1,0 +1,3 @@
+
+        RestAction<$resultType> action = (($resourceImplType) resource).${actionMethodName}(#generateCallSignature($parameters));
+        execute(action);

@@ -36,24 +36,23 @@ import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.gwtplatform.dispatch.rest.client.ResourceDelegate;
 import com.gwtplatform.dispatch.rest.rebind.AbstractVelocityGenerator;
 import com.gwtplatform.dispatch.rest.rebind.GeneratorWithInput;
-import com.gwtplatform.dispatch.rest.rebind.Parameter;
-import com.gwtplatform.dispatch.rest.rebind.action.ActionDefinition;
-import com.gwtplatform.dispatch.rest.rebind.action.ActionMethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.events.RegisterGinBindingEvent;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
+import com.gwtplatform.dispatch.rest.rebind.resource.MethodGenerator;
 import com.gwtplatform.dispatch.rest.rebind.resource.ResourceDefinition;
-import com.gwtplatform.dispatch.rest.rebind.subresource.SubResourceDefinition;
-import com.gwtplatform.dispatch.rest.rebind.subresource.SubResourceMethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
+import com.gwtplatform.dispatch.rest.rebind.utils.Generators;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 
 public class DelegateGenerator extends AbstractVelocityGenerator
         implements GeneratorWithInput<ResourceDefinition, DelegateDefinition> {
+    static final String IMPL = "Delegate";
+
     private static final String TEMPLATE = "com/gwtplatform/dispatch/rest/delegates/rebind/Delegate.vm";
-    private static final String IMPL = "Delegate";
 
     private final EventBus eventBus;
+    private final Set<MethodGenerator> methodGenerators;
 
     private ResourceDefinition resourceDefinition;
     private Set<String> imports;
@@ -64,10 +63,12 @@ public class DelegateGenerator extends AbstractVelocityGenerator
             Logger logger,
             GeneratorContext context,
             VelocityEngine velocityEngine,
-            EventBus eventBus) {
+            EventBus eventBus,
+            Set<MethodGenerator> methodGenerators) {
         super(logger, context, velocityEngine);
 
         this.eventBus = eventBus;
+        this.methodGenerators = methodGenerators;
     }
 
     @Override
@@ -81,10 +82,12 @@ public class DelegateGenerator extends AbstractVelocityGenerator
     public DelegateDefinition generate(ResourceDefinition resourceDefinition) throws UnableToCompleteException {
         this.resourceDefinition = resourceDefinition;
 
-        JClassType resourceInterface = resourceDefinition.getResourceInterface();
+        imports = Sets.newTreeSet();
+        imports.add(RestAction.class.getName());
+        imports.add(resourceDefinition.getResourceInterface().getQualifiedSourceName());
+        imports.add(resourceDefinition.getQualifiedName());
 
-        imports = Sets.newHashSet(RestAction.class.getName(), resourceInterface.getQualifiedSourceName(),
-                resourceDefinition.getQualifiedName());
+        methods = Lists.newArrayList();
 
         generateMethods();
 
@@ -121,127 +124,26 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         variables.put("imports", imports);
     }
 
-    private void generateMethods() {
-        // TODO: Create method generators for all 3 kinds, w/ higher priority, ensure input is DelegateDefinition
-
-        methods = Lists.newArrayList();
-
-        for (MethodDefinition definition : resourceDefinition.getMethodDefinitions()) {
-            imports.addAll(definition.getImports());
-
-            if (definition instanceof DelegateMethodDefinition) {
-                generateMethod((DelegateMethodDefinition) definition);
-            } else if (definition instanceof ActionMethodDefinition) {
-                generateMethod((ActionMethodDefinition) definition);
-            } else {
-                generateMethod((SubResourceMethodDefinition) definition);
-            }
+    private void generateMethods() throws UnableToCompleteException {
+        for (MethodDefinition methodDefinition : resourceDefinition.getMethodDefinitions()) {
+            generateMethod(methodDefinition);
         }
     }
 
-    private void generateMethod(DelegateMethodDefinition definition) {
-        StringBuilder outputBuilder = new StringBuilder(definition.getStubOutput());
-        StringBuilder executeBuilder = generateExecuteAction(definition, definition.getActionMethodName());
+    private void generateMethod(MethodDefinition methodDefinition)
+            throws UnableToCompleteException {
+        DelegatedMethodContext context = new DelegatedMethodContext(resourceDefinition, methodDefinition);
+        MethodGenerator generator = Generators.findGenerator(getLogger(), methodGenerators, context);
 
-        int braceIndex = outputBuilder.indexOf("{");
-        outputBuilder.insert(braceIndex + 1, executeBuilder);
+        if (generator != null) {
+            MethodDefinition delegatedDefinition = generator.generate(context);
 
-        methods.add(outputBuilder.toString());
-    }
-
-    private void generateMethod(ActionMethodDefinition definition) {
-        StringBuilder outputBuilder = new StringBuilder(definition.getOutput());
-        StringBuilder executeBuilder = generateExecuteAction(definition, definition.getMethod().getName())
-                .append("\n        return action;");
-
-        replaceMethodContent(outputBuilder, executeBuilder);
-
-        methods.add(outputBuilder.toString());
-    }
-
-    private StringBuilder generateExecuteAction(ActionMethodDefinition definition, String methodName) {
-        ActionDefinition actionDefinition = definition.getActionDefinitions().get(0);
-
-        StringBuilder executeBuilder = new StringBuilder("\n        RestAction<")
-                .append(actionDefinition.getResultType().getParameterizedQualifiedSourceName())
-                .append("> action = ");
-
-        appendResourceVariable(executeBuilder, definition)
-                .append(".")
-                .append(methodName);
-
-        return appendParameters(executeBuilder, definition)
-                .append("        execute(action);");
-    }
-
-    private void generateMethod(SubResourceMethodDefinition definition) {
-        SubResourceDefinition subResourceDefinition =
-                (SubResourceDefinition) definition.getResourceDefinitions().get(0);
-        ClassDefinition subDelegateDefinition = new ClassDefinition(subResourceDefinition.getPackageName(),
-                subResourceDefinition.getResourceInterface().getSimpleSourceName() + IMPL);
-
-        imports.add(subDelegateDefinition.getQualifiedName());
-
-        StringBuilder outputBuilder = new StringBuilder(definition.getOutput());
-
-        StringBuilder subDelegateBuilder = new StringBuilder().append("\n        ")
-                .append(definition.getMethod().getReturnType().getParameterizedQualifiedSourceName())
-                .append(" subResource = ")
-                .append("resource.")
-                .append(definition.getMethod().getName());
-
-        appendParameters(subDelegateBuilder, definition)
-                .append("        ")
-                .append(subDelegateDefinition.getClassName())
-                .append(" delegate = new ")
-                .append(subDelegateDefinition.getClassName())
-                .append("(dispatcher, subResource);\n")
-                .append("\n")
-                .append("        copyFields(delegate);\n")
-                .append("\n")
-                .append("        return delegate;");
-
-        replaceMethodContent(outputBuilder, subDelegateBuilder);
-
-        methods.add(outputBuilder.toString());
-    }
-
-    private StringBuilder appendParameters(StringBuilder executeBuilder, MethodDefinition definition) {
-        List<Parameter> parameters = definition.getParameters();
-
-        executeBuilder.append("(");
-
-        for (Parameter parameter : parameters) {
-            executeBuilder.append(parameter.getVariableName()).append(", ");
-        }
-
-        if (!parameters.isEmpty()) {
-            int length = executeBuilder.length();
-            executeBuilder.delete(length - 2, length);
-        }
-
-        return executeBuilder.append(");\n");
-    }
-
-    private StringBuilder appendResourceVariable(StringBuilder builder, ActionMethodDefinition definition) {
-        if (definition instanceof DelegateMethodDefinition) {
-            builder.append("((")
-                    .append(resourceDefinition.getClassName())
-                    .append(") resource)");
+            methods.add(delegatedDefinition.getOutput());
+            imports.addAll(delegatedDefinition.getImports());
         } else {
-            builder.append("resource");
+            getLogger().die("Unable to find a delegated method generator for `%s#%s`",
+                    resourceDefinition.getQualifiedName(), methodDefinition.getMethod().getName());
         }
-
-        return builder;
-    }
-
-    private void replaceMethodContent(StringBuilder methodBuilder, StringBuilder newContentBuilder) {
-        int openBraceIndex = methodBuilder.indexOf("{");
-        int closeBraceIndex = methodBuilder.lastIndexOf("}");
-
-        newContentBuilder.append("\n    ");
-
-        methodBuilder.replace(openBraceIndex + 1, closeBraceIndex, newContentBuilder.toString());
     }
 
     private void registerGinBinding() throws UnableToCompleteException {

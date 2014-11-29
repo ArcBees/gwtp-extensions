@@ -19,6 +19,8 @@ package com.gwtplatform.dispatch.rest.delegates.rebind;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
 
 public class DelegateDefinition extends ClassDefinition {
+    // TODO: Add ResourceDef + MethodDefs
+
     public DelegateDefinition(
             String packageName,
             String className) {
