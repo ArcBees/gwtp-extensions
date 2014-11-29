@@ -1,3 +1,10 @@
+    @Override
+    public $returnType ${methodName}(#generateMethodSignature($methodParameters)) {
+#if($returnValue)
+        return $returnValue;
+#end
+    }
+
     RestAction<$resultType> ${actionMethodName}(#generateMethodSignature($methodParameters)) {
         return new ${action.className}(defaultDateFormat#foreach ($param in $actionParameters),
                 $param.variableName#end);

@@ -50,19 +50,13 @@ public class DelegatedDelegateMethodGenerator extends AbstractDelegatedMethodGen
 
     @Override
     public MethodDefinition generate(MethodContext context) throws UnableToCompleteException {
-        // TODO: Don't replace replace in the other output
         setContext(context);
 
-        StringBuilder outputBuilder = new StringBuilder(getMethodDefinition().getStubOutput());
         StringWriter writer = new StringWriter();
-        MethodDefinition delegateDefinition = new MethodDefinition(getMethodDefinition());
-
         mergeTemplate(writer);
 
-        int braceIndex = outputBuilder.indexOf("{");
-        outputBuilder.insert(braceIndex + 1, writer);
-
-        delegateDefinition.setOutput(outputBuilder.toString());
+        MethodDefinition delegateDefinition = new MethodDefinition(getMethodDefinition());
+        delegateDefinition.setOutput(writer.toString());
 
         return delegateDefinition;
     }
@@ -73,8 +67,11 @@ public class DelegatedDelegateMethodGenerator extends AbstractDelegatedMethodGen
         JClassType resultType = actionDefinition.getResultType();
 
         variables.put("resultType", resultType.getParameterizedQualifiedSourceName());
+        variables.put("returnType", getMethod().getReturnType().getParameterizedQualifiedSourceName());
+        variables.put("returnValue", getMethodDefinition().getReturnValue());
         variables.put("resourceImplType", getResourceDefinition().getClassName());
         variables.put("actionMethodName", getMethodDefinition().getActionMethodName());
+        variables.put("methodName", getMethod().getName());
         variables.put("parameters", getMethodDefinition().getParameters());
     }
 

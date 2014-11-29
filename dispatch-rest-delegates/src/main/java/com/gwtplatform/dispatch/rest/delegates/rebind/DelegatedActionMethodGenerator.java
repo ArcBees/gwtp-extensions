@@ -51,17 +51,13 @@ public class DelegatedActionMethodGenerator extends AbstractDelegatedMethodGener
 
     @Override
     public MethodDefinition generate(MethodContext context) throws UnableToCompleteException {
-        // TODO: Don't replace into other output
         setContext(context);
 
-        StringBuilder outputBuilder = new StringBuilder(getMethodDefinition().getOutput());
         StringWriter writer = new StringWriter();
-        MethodDefinition delegateDefinition = new MethodDefinition(getMethodDefinition());
-
         mergeTemplate(writer);
-        replaceMethodContent(outputBuilder, writer.toString());
 
-        delegateDefinition.setOutput(outputBuilder.toString());
+        MethodDefinition delegateDefinition = new MethodDefinition(getMethodDefinition());
+        delegateDefinition.setOutput(writer.toString());
 
         return delegateDefinition;
     }

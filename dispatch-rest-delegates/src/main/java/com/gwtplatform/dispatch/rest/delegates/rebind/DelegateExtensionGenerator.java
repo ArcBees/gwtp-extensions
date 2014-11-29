@@ -66,7 +66,7 @@ public class DelegateExtensionGenerator extends AbstractGenerator implements Ext
 
     private void maybeGenerateDelegate(ResourceDefinition resourceDefinition) throws UnableToCompleteException {
         if (delegateGenerator.canGenerate(resourceDefinition)) {
-            ClassDefinition definition = delegateGenerator.generate(resourceDefinition);
+            DelegateDefinition definition = delegateGenerator.generate(resourceDefinition);
             definitions.add(definition);
         }
     }

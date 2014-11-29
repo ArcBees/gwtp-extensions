@@ -21,7 +21,7 @@ public class $impl extends AbstractResourceDelegate<$resourceType> implements $r
     }
 
 #foreach ($method in $methods)
-$method
+$method.output
 #end
     @Override
     protected $resourceType asResource() {

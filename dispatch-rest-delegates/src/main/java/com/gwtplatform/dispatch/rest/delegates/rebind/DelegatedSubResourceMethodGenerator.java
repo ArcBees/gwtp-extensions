@@ -56,27 +56,17 @@ public class DelegatedSubResourceMethodGenerator extends AbstractDelegatedMethod
 
     @Override
     public MethodDefinition generate(MethodContext context) throws UnableToCompleteException {
-        // TODO: Don't replace replace in the other output
         setContext(context);
 
+        resolveTypeDefinitions();
+
+        StringWriter writer = new StringWriter();
+        mergeTemplate(writer);
+
         MethodDefinition delegateDefinition = new MethodDefinition(getMethodDefinition());
-        ResourceDefinition subResourceDefinition = getMethodDefinition().getResourceDefinitions().get(0);
-        JClassType subResourceInterface = subResourceDefinition.getResourceInterface();
-
-        subResourceTypeDefinition = new ClassDefinition(subResourceInterface);
-        subDelegateTypeDefinition = new ClassDefinition(subResourceTypeDefinition.getPackageName(),
-                subResourceTypeDefinition.getClassName() + DelegateGenerator.IMPL);
-
         delegateDefinition.addImport(subResourceTypeDefinition.getQualifiedName());
         delegateDefinition.addImport(subDelegateTypeDefinition.getQualifiedName());
-
-        StringBuilder outputBuilder = new StringBuilder(getMethodDefinition().getOutput());
-        StringWriter writer = new StringWriter();
-
-        mergeTemplate(writer);
-        replaceMethodContent(outputBuilder, writer.toString());
-
-        delegateDefinition.setOutput(outputBuilder.toString());
+        delegateDefinition.setOutput(writer.toString());
 
         return delegateDefinition;
     }
@@ -97,5 +87,14 @@ public class DelegatedSubResourceMethodGenerator extends AbstractDelegatedMethod
     @Override
     protected String getTemplate() {
         return TEMPLATE;
+    }
+
+    private void resolveTypeDefinitions() {
+        ResourceDefinition subResourceDefinition = getMethodDefinition().getResourceDefinitions().get(0);
+        JClassType subResourceInterface = subResourceDefinition.getResourceInterface();
+
+        subResourceTypeDefinition = new ClassDefinition(subResourceInterface);
+        subDelegateTypeDefinition = new ClassDefinition(subResourceTypeDefinition.getPackageName(),
+                subResourceTypeDefinition.getClassName() + DelegateGenerator.IMPL);
     }
 }

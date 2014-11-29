@@ -1,3 +1,9 @@
-
+    @Override
+    public $returnType ${methodName}(#generateMethodSignature($parameters)) {
         RestAction<$resultType> action = (($resourceImplType) resource).${actionMethodName}(#generateCallSignature($parameters));
         execute(action);
+#if($returnValue)
+
+        return $returnValue;
+#end
+    }

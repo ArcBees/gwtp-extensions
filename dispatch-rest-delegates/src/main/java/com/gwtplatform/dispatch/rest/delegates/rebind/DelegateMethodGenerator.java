@@ -44,16 +44,12 @@ import com.gwtplatform.dispatch.rest.shared.RestAction;
 import static com.gwtplatform.dispatch.rest.rebind.utils.Generators.getGenerator;
 
 public class DelegateMethodGenerator extends AbstractMethodGenerator {
-    private static final String TEMPLATE_ACTION =
-            "com/gwtplatform/dispatch/rest/delegates/rebind/DelegateRestActionMethod.vm";
-    private static final String TEMPLATE_STUB =
-            "com/gwtplatform/dispatch/rest/delegates/rebind/DelegateStubActionMethod.vm";
+    private static final String TEMPLATE = "com/gwtplatform/dispatch/rest/delegates/rebind/DelegateMethod.vm";
     private static final String ACTION_METHOD_SUFFIX = "$action";
 
     private final Set<ActionGenerator> actionGenerators;
 
     private DelegateMethodDefinition methodDefinition;
-    private String template;
 
     @Inject
     DelegateMethodGenerator(
@@ -83,10 +79,11 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
         List<Parameter> parameters = resolveParameters();
         List<Parameter> inheritedParameters = resolveInheritedParameters();
         JClassType resultType = parseResultType();
+        String returnValue = resolveReturnValue();
         String actionMethodName = getMethod().getName() + ACTION_METHOD_SUFFIX;
 
         methodDefinition = new DelegateMethodDefinition(getMethod(), parameters, inheritedParameters, resultType,
-                actionMethodName);
+                returnValue, actionMethodName);
         methodDefinition.addImport(RestAction.class.getName());
 
         generateAction();
@@ -97,20 +94,19 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
 
     @Override
     protected String getTemplate() {
-        return template;
+        return TEMPLATE;
     }
 
     @Override
     protected void populateTemplateVariables(Map<String, Object> variables) {
         String resultTypeName = methodDefinition.getResultType().getParameterizedQualifiedSourceName();
-        String returnValue = resolveReturnValue();
 
         List<Parameter> actionParameters = methodDefinition.getInheritedParameters();
         actionParameters.addAll(methodDefinition.getParameters());
 
         variables.put("resultType", resultTypeName);
         variables.put("returnType", getMethod().getReturnType().getParameterizedQualifiedSourceName());
-        variables.put("returnValue", returnValue);
+        variables.put("returnValue", methodDefinition.getReturnValue());
         variables.put("methodName", getMethod().getName());
         variables.put("actionMethodName", methodDefinition.getActionMethodName());
         variables.put("methodParameters", methodDefinition.getParameters());
@@ -143,20 +139,10 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
     }
 
     private void generateMethods() throws UnableToCompleteException {
-        StringWriter actionMethodWriter = new StringWriter();
-        StringWriter stubActionWriter = new StringWriter();
+        StringWriter writer = new StringWriter();
+        mergeTemplate(writer);
 
-        template = TEMPLATE_ACTION;
-        mergeTemplate(actionMethodWriter);
-
-        template = TEMPLATE_STUB;
-        mergeTemplate(stubActionWriter);
-
-        String stubMethodOutput = stubActionWriter.toString();
-        methodDefinition.setStubOutput(stubMethodOutput);
-
-        actionMethodWriter.append(stubMethodOutput);
-        methodDefinition.setOutput(actionMethodWriter.toString());
+        methodDefinition.setOutput(writer.toString());
     }
 
     private JClassType parseResultType() throws UnableToCompleteException {

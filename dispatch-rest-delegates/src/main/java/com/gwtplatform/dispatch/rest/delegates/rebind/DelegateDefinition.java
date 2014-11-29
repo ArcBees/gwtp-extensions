@@ -16,14 +16,33 @@
 
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
+import com.gwtplatform.dispatch.rest.rebind.resource.ResourceDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
 
 public class DelegateDefinition extends ClassDefinition {
-    // TODO: Add ResourceDef + MethodDefs
+    private final ResourceDefinition resourceDefinition;
+    private final List<MethodDefinition> methodDefinitions;
 
     public DelegateDefinition(
             String packageName,
-            String className) {
+            String className,
+            ResourceDefinition resourceDefinition,
+            List<MethodDefinition> methodDefinitions) {
         super(packageName, className);
+
+        this.resourceDefinition = resourceDefinition;
+        this.methodDefinitions = methodDefinitions;
+    }
+
+    public ResourceDefinition getResourceDefinition() {
+        return resourceDefinition;
+    }
+
+    public List<MethodDefinition> getMethodDefinitions() {
+        return Lists.newArrayList(methodDefinitions);
     }
 }

@@ -24,18 +24,19 @@ import com.gwtplatform.dispatch.rest.rebind.Parameter;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionMethodDefinition;
 
 public class DelegateMethodDefinition extends ActionMethodDefinition {
+    private final String returnValue;
     private final String actionMethodName;
-
-    private String stubOutput;
 
     public DelegateMethodDefinition(
             JMethod method,
             List<Parameter> parameters,
             List<Parameter> inheritedParameters,
             JClassType resultType,
+            String returnValue,
             String actionMethodName) {
         super(method, parameters, inheritedParameters, resultType);
 
+        this.returnValue = returnValue;
         this.actionMethodName = actionMethodName;
     }
 
@@ -43,11 +44,7 @@ public class DelegateMethodDefinition extends ActionMethodDefinition {
         return actionMethodName;
     }
 
-    public void setStubOutput(String stubOutput) {
-        this.stubOutput = stubOutput;
-    }
-
-    public String getStubOutput() {
-        return stubOutput;
+    public String getReturnValue() {
+        return returnValue;
     }
 }

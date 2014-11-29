@@ -55,8 +55,8 @@ public class DelegateGenerator extends AbstractVelocityGenerator
     private final Set<MethodGenerator> methodGenerators;
 
     private ResourceDefinition resourceDefinition;
+    private List<MethodDefinition> methodDefinitions;
     private Set<String> imports;
-    private List<String> methods;
 
     @Inject
     DelegateGenerator(
@@ -87,7 +87,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         imports.add(resourceDefinition.getResourceInterface().getQualifiedSourceName());
         imports.add(resourceDefinition.getQualifiedName());
 
-        methods = Lists.newArrayList();
+        methodDefinitions = Lists.newArrayList();
 
         generateMethods();
 
@@ -97,7 +97,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
         registerGinBinding();
 
-        return new DelegateDefinition(getPackageName(), getImplName());
+        return new DelegateDefinition(getPackageName(), getImplName(), resourceDefinition, methodDefinitions);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         JClassType resourceInterface = resourceDefinition.getResourceInterface();
 
         variables.put("resourceType", resourceInterface.getSimpleSourceName());
-        variables.put("methods", methods);
+        variables.put("methods", methodDefinitions);
         variables.put("imports", imports);
     }
 
@@ -130,15 +130,14 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         }
     }
 
-    private void generateMethod(MethodDefinition methodDefinition)
-            throws UnableToCompleteException {
+    private void generateMethod(MethodDefinition methodDefinition) throws UnableToCompleteException {
         DelegatedMethodContext context = new DelegatedMethodContext(resourceDefinition, methodDefinition);
         MethodGenerator generator = Generators.findGenerator(getLogger(), methodGenerators, context);
 
         if (generator != null) {
             MethodDefinition delegatedDefinition = generator.generate(context);
 
-            methods.add(delegatedDefinition.getOutput());
+            methodDefinitions.add(delegatedDefinition);
             imports.addAll(delegatedDefinition.getImports());
         } else {
             getLogger().die("Unable to find a delegated method generator for `%s#%s`",
