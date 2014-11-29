@@ -28,7 +28,9 @@ import com.gwtplatform.dispatch.rest.rebind.AbstractGenerator;
 import com.gwtplatform.dispatch.rest.rebind.extension.ExtensionContext;
 import com.gwtplatform.dispatch.rest.rebind.extension.ExtensionGenerator;
 import com.gwtplatform.dispatch.rest.rebind.extension.ExtensionPoint;
+import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.resource.ResourceDefinition;
+import com.gwtplatform.dispatch.rest.rebind.subresource.SubResourceMethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 
@@ -57,17 +59,32 @@ public class DelegateExtensionGenerator extends AbstractGenerator implements Ext
     public Collection<ClassDefinition> generate(ExtensionContext context) throws UnableToCompleteException {
         definitions = Lists.newArrayList();
 
-        for (ResourceDefinition resourceDefinition : context.getResourceDefinitions()) {
-            maybeGenerateDelegate(resourceDefinition);
-        }
+        generate(context.getResourceDefinitions());
 
         return definitions;
     }
 
+    private void generate(Collection<ResourceDefinition> resourceDefinitions) throws UnableToCompleteException {
+        for (ResourceDefinition resourceDefinition : resourceDefinitions) {
+            maybeGenerateDelegate(resourceDefinition);
+        }
+    }
+
     private void maybeGenerateDelegate(ResourceDefinition resourceDefinition) throws UnableToCompleteException {
         if (delegateGenerator.canGenerate(resourceDefinition)) {
+            generateSubResourceDelegates(resourceDefinition);
+
             DelegateDefinition definition = delegateGenerator.generate(resourceDefinition);
             definitions.add(definition);
+        }
+    }
+
+    private void generateSubResourceDelegates(ResourceDefinition resourceDefinition) throws UnableToCompleteException {
+        for (MethodDefinition methodDefinition : resourceDefinition.getMethodDefinitions()) {
+            if (methodDefinition instanceof SubResourceMethodDefinition) {
+                SubResourceMethodDefinition resourceMethodDefinition = (SubResourceMethodDefinition) methodDefinition;
+                generate(resourceMethodDefinition.getResourceDefinitions());
+            }
         }
     }
 }

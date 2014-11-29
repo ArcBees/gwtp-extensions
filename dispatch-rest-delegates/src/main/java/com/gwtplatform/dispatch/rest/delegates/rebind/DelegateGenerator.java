@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.ws.rs.Path;
 
 import org.apache.velocity.app.VelocityEngine;
 
@@ -54,6 +55,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
     private final EventBus eventBus;
     private final Set<MethodGenerator> methodGenerators;
+    private final List<ClassDefinition> generatedDelegates;
 
     private ResourceDefinition resourceDefinition;
     private List<MethodDefinition> methodDefinitions;
@@ -70,13 +72,14 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
         this.eventBus = eventBus;
         this.methodGenerators = methodGenerators;
+        this.generatedDelegates = Lists.newArrayList();
     }
 
     @Override
     public boolean canGenerate(ResourceDefinition resourceDefinition) {
         this.resourceDefinition = resourceDefinition;
 
-        return findType(getClassDefinition().getQualifiedName()) == null;
+        return !generatedDelegates.contains(getClassDefinition());
     }
 
     @Override
@@ -96,9 +99,12 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         mergeTemplate(printWriter);
         commit(printWriter);
 
-        registerGinBinding();
+        maybeRegisterGinBinding();
 
-        return new DelegateDefinition(getPackageName(), getImplName(), resourceDefinition, methodDefinitions);
+        DelegateDefinition definition =
+                new DelegateDefinition(getPackageName(), getImplName(), resourceDefinition, methodDefinitions);
+        generatedDelegates.add(definition);
+        return definition;
     }
 
     @Override
@@ -146,12 +152,18 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         }
     }
 
-    private void registerGinBinding() throws UnableToCompleteException {
-        JGenericType resourceDelegateType = getType(ResourceDelegate.class).isGenericType();
-        JParameterizedType parameterizedResourceDelegateType = getContext().getTypeOracle().getParameterizedType(
-                resourceDelegateType, new JClassType[]{resourceDefinition.getResourceInterface()});
-        ClassDefinition definition = new ClassDefinition(parameterizedResourceDelegateType);
+    private void maybeRegisterGinBinding() throws UnableToCompleteException {
+        if (!isSubResource()) {
+            JGenericType resourceDelegateType = getType(ResourceDelegate.class).isGenericType();
+            JParameterizedType parameterizedResourceDelegateType = getContext().getTypeOracle().getParameterizedType(
+                    resourceDelegateType, new JClassType[]{resourceDefinition.getResourceInterface()});
+            ClassDefinition definition = new ClassDefinition(parameterizedResourceDelegateType);
 
-        RegisterGinBindingEvent.postSingleton(eventBus, definition, getClassDefinition());
+            RegisterGinBindingEvent.postSingleton(eventBus, definition, getClassDefinition());
+        }
+    }
+
+    private boolean isSubResource() {
+        return !resourceDefinition.getResourceInterface().isAnnotationPresent(Path.class);
     }
 }
