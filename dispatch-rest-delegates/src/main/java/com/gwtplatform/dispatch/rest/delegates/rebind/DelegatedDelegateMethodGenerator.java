@@ -43,7 +43,7 @@ public class DelegatedDelegateMethodGenerator extends AbstractDelegatedMethodGen
     }
 
     @Override
-    public boolean canGenerate(MethodContext context) throws UnableToCompleteException {
+    public boolean canGenerate(MethodContext context) {
         return context instanceof DelegatedMethodContext
                 && ((DelegatedMethodContext) context).getMethodDefinition() instanceof DelegateMethodDefinition;
     }
@@ -69,7 +69,7 @@ public class DelegatedDelegateMethodGenerator extends AbstractDelegatedMethodGen
         variables.put("resultType", resultType.getParameterizedQualifiedSourceName());
         variables.put("returnType", getMethod().getReturnType().getParameterizedQualifiedSourceName());
         variables.put("returnValue", getMethodDefinition().getReturnValue());
-        variables.put("resourceImplType", getResourceDefinition().getClassName());
+        variables.put("resourceImplType", getResourceDefinition().getParameterizedClassName());
         variables.put("actionMethodName", getMethodDefinition().getActionMethodName());
         variables.put("methodName", getMethod().getName());
         variables.put("parameters", getMethodDefinition().getParameters());

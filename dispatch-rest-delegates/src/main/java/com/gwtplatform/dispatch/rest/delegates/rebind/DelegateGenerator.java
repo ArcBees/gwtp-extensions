@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.ws.rs.Path;
 
 import org.apache.velocity.app.VelocityEngine;
 
@@ -33,7 +34,7 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JGenericType;
 import com.google.gwt.core.ext.typeinfo.JParameterizedType;
-import com.gwtplatform.dispatch.rest.client.ResourceDelegate;
+import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
 import com.gwtplatform.dispatch.rest.rebind.AbstractVelocityGenerator;
 import com.gwtplatform.dispatch.rest.rebind.GeneratorWithInput;
 import com.gwtplatform.dispatch.rest.rebind.events.RegisterGinBindingEvent;
@@ -41,9 +42,10 @@ import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodGenerator;
 import com.gwtplatform.dispatch.rest.rebind.resource.ResourceDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
-import com.gwtplatform.dispatch.rest.rebind.utils.Generators;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
+
+import static com.gwtplatform.dispatch.rest.rebind.utils.Generators.findGenerator;
 
 public class DelegateGenerator extends AbstractVelocityGenerator
         implements GeneratorWithInput<ResourceDefinition, DelegateDefinition> {
@@ -53,6 +55,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
     private final EventBus eventBus;
     private final Set<MethodGenerator> methodGenerators;
+    private final List<ClassDefinition> generatedDelegates;
 
     private ResourceDefinition resourceDefinition;
     private List<MethodDefinition> methodDefinitions;
@@ -69,13 +72,14 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
         this.eventBus = eventBus;
         this.methodGenerators = methodGenerators;
+        this.generatedDelegates = Lists.newArrayList();
     }
 
     @Override
-    public boolean canGenerate(ResourceDefinition resourceDefinition) throws UnableToCompleteException {
+    public boolean canGenerate(ResourceDefinition resourceDefinition) {
         this.resourceDefinition = resourceDefinition;
 
-        return findType(getClassDefinition().getQualifiedName()) == null;
+        return !generatedDelegates.contains(getClassDefinition());
     }
 
     @Override
@@ -95,9 +99,12 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         mergeTemplate(printWriter);
         commit(printWriter);
 
-        registerGinBinding();
+        maybeRegisterGinBinding();
 
-        return new DelegateDefinition(getPackageName(), getImplName(), resourceDefinition, methodDefinitions);
+        DelegateDefinition definition =
+                new DelegateDefinition(getPackageName(), getImplName(), resourceDefinition, methodDefinitions);
+        generatedDelegates.add(definition);
+        return definition;
     }
 
     @Override
@@ -119,7 +126,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
     protected void populateTemplateVariables(Map<String, Object> variables) {
         JClassType resourceInterface = resourceDefinition.getResourceInterface();
 
-        variables.put("resourceType", resourceInterface.getSimpleSourceName());
+        variables.put("resourceType", new ClassDefinition(resourceInterface).getParameterizedClassName());
         variables.put("methods", methodDefinitions);
         variables.put("imports", imports);
     }
@@ -132,7 +139,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
     private void generateMethod(MethodDefinition methodDefinition) throws UnableToCompleteException {
         DelegatedMethodContext context = new DelegatedMethodContext(resourceDefinition, methodDefinition);
-        MethodGenerator generator = Generators.findGenerator(getLogger(), methodGenerators, context);
+        MethodGenerator generator = findGenerator(methodGenerators, context);
 
         if (generator != null) {
             MethodDefinition delegatedDefinition = generator.generate(context);
@@ -145,12 +152,18 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         }
     }
 
-    private void registerGinBinding() throws UnableToCompleteException {
-        JGenericType resourceDelegateType = getType(ResourceDelegate.class).isGenericType();
-        JParameterizedType parameterizedResourceDelegateType = getContext().getTypeOracle().getParameterizedType(
-                resourceDelegateType, new JClassType[]{resourceDefinition.getResourceInterface()});
-        ClassDefinition definition = new ClassDefinition(parameterizedResourceDelegateType);
+    private void maybeRegisterGinBinding() throws UnableToCompleteException {
+        if (!isSubResource()) {
+            JGenericType resourceDelegateType = getType(ResourceDelegate.class).isGenericType();
+            JParameterizedType parameterizedResourceDelegateType = getContext().getTypeOracle().getParameterizedType(
+                    resourceDelegateType, new JClassType[]{resourceDefinition.getResourceInterface()});
+            ClassDefinition definition = new ClassDefinition(parameterizedResourceDelegateType);
 
-        RegisterGinBindingEvent.postSingleton(eventBus, definition, getClassDefinition());
+            RegisterGinBindingEvent.postSingleton(eventBus, definition, getClassDefinition());
+        }
+    }
+
+    private boolean isSubResource() {
+        return !resourceDefinition.getResourceInterface().isAnnotationPresent(Path.class);
     }
 }

@@ -22,6 +22,7 @@
     <properties>
         <gwtp.version>1.4-SNAPSHOT</gwtp.version>
         <gwt.version>2.7.0</gwt.version>
+        <mockito.version>1.10.8</mockito.version>
 
         <maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
     </properties>
@@ -34,8 +35,22 @@
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
+        </dependency>
+
+        <!-- For testing tools -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>compile</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

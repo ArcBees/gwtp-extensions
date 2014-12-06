@@ -2,8 +2,8 @@ package $package;
 
 import javax.inject.Inject;
 
-import com.gwtplatform.dispatch.rest.client.AbstractResourceDelegate;
 import com.gwtplatform.dispatch.rest.client.RestDispatch;
+import com.gwtplatform.dispatch.rest.delegates.client.AbstractResourceDelegate;
 #foreach ($import in $imports)
 import $import;
 #end
