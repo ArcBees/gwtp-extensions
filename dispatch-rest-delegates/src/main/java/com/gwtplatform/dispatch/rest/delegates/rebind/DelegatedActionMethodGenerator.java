@@ -44,7 +44,7 @@ public class DelegatedActionMethodGenerator extends AbstractDelegatedMethodGener
     }
 
     @Override
-    public boolean canGenerate(MethodContext context) throws UnableToCompleteException {
+    public boolean canGenerate(MethodContext context) {
         return context instanceof DelegatedMethodContext
                 && ((DelegatedMethodContext) context).getMethodDefinition() instanceof ActionMethodDefinition;
     }
