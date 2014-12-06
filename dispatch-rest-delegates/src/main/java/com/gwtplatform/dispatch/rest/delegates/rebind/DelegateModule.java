@@ -16,6 +16,8 @@
 
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
+import javax.inject.Singleton;
+
 import com.google.inject.AbstractModule;
 
 import static com.gwtplatform.dispatch.rest.rebind.extension.ExtensionModule.addExtensionGenerator;
@@ -29,5 +31,7 @@ public class DelegateModule extends AbstractModule {
         addMethodGenerator(binder()).to(DelegatedDelegateMethodGenerator.class);
         addMethodGenerator(binder()).to(DelegatedActionMethodGenerator.class);
         addMethodGenerator(binder()).to(DelegatedSubResourceMethodGenerator.class);
+
+        bind(DelegateGenerator.class).in(Singleton.class);
     }
 }
