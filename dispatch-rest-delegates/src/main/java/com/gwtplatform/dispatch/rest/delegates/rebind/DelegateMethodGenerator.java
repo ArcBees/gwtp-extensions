@@ -35,19 +35,15 @@ import com.gwtplatform.dispatch.rest.rebind.Parameter;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionContext;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionDefinition;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionGenerator;
-import com.gwtplatform.dispatch.rest.rebind.resource.AbstractMethodGenerator;
+import com.gwtplatform.dispatch.rest.rebind.action.ActionMethodGenerator;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodContext;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 
-import static com.gwtplatform.dispatch.rest.rebind.utils.Generators.getGenerator;
-
-public class DelegateMethodGenerator extends AbstractMethodGenerator {
+public class DelegateMethodGenerator extends ActionMethodGenerator {
     private static final String TEMPLATE = "com/gwtplatform/dispatch/rest/delegates/rebind/DelegateMethod.vm";
     private static final String ACTION_METHOD_SUFFIX = "$action";
-
-    private final Set<ActionGenerator> actionGenerators;
 
     private DelegateMethodDefinition methodDefinition;
 
@@ -55,11 +51,9 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
     DelegateMethodGenerator(
             Logger logger,
             GeneratorContext context,
-            VelocityEngine velocityEngine,
-            Set<ActionGenerator> actionGenerators) {
-        super(logger, context, velocityEngine);
-
-        this.actionGenerators = actionGenerators;
+            Set<ActionGenerator> actionGenerators,
+            VelocityEngine velocityEngine) {
+        super(logger, context, actionGenerators, velocityEngine);
     }
 
     @Override
@@ -68,8 +62,9 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
 
         JType returnType = getMethod().getReturnType();
 
-        return returnType.isClass() != null
-                || returnType.isPrimitive() != null;
+        return (returnType.isClass() != null || returnType.isPrimitive() != null)
+                && hasExactlyOneHttpVerb()
+                && canGenerateAction();
     }
 
     @Override
@@ -132,8 +127,7 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
 
     private void generateAction() throws UnableToCompleteException {
         ActionContext actionContext = new ActionContext(getMethodContext(), methodDefinition);
-        ActionGenerator generator = getGenerator(getLogger(), actionGenerators, actionContext);
-        ActionDefinition definition = generator.generate(actionContext);
+        ActionDefinition definition = generateAction(actionContext);
 
         methodDefinition.addAction(definition);
     }
@@ -160,11 +154,14 @@ public class DelegateMethodGenerator extends AbstractMethodGenerator {
     }
 
     private JClassType convertPrimitiveToBoxed(JPrimitiveType primitive) throws UnableToCompleteException {
+        JClassType boxedType = null;
         try {
             String boxedSourceName = primitive.getQualifiedBoxedSourceName();
-            return getContext().getTypeOracle().parse(boxedSourceName).isClass();
+            boxedType = getContext().getTypeOracle().parse(boxedSourceName).isClass();
         } catch (TypeOracleException e) {
-            return getLogger().die("Unable to convert '" + primitive + "' to a boxed type.");
+            getLogger().die("Unable to convert '%s' to a boxed type.", primitive);
         }
+
+        return boxedType;
     }
 }
