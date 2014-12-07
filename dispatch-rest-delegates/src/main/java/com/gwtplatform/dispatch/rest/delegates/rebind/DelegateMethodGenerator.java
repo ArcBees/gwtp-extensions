@@ -17,6 +17,7 @@
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
 
         JType returnType = getMethod().getReturnType();
 
-        return (returnType.isClass() != null || returnType.isPrimitive() != null)
+        return (returnType.isClass() != null || returnType.isPrimitive() != null || isCollection(returnType))
                 && hasExactlyOneHttpVerb()
                 && canGenerateAction();
     }
@@ -147,7 +148,7 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
         if (primitiveType != null) {
             classType = convertPrimitiveToBoxed(primitiveType);
         } else {
-            classType = returnType.isClass();
+            classType = returnType.isClassOrInterface();
         }
 
         return classType;
@@ -163,5 +164,14 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
         }
 
         return boxedType;
+    }
+
+    private boolean isCollection(JType returnType) {
+        JClassType collectionType = findType(Collection.class);
+        JClassType mapType = findType(Map.class);
+        JClassType interfaceType = returnType.isInterface();
+
+        return (collectionType != null && interfaceType.isAssignableTo(collectionType))
+                || (mapType != null && interfaceType.isAssignableTo(mapType));
     }
 }
