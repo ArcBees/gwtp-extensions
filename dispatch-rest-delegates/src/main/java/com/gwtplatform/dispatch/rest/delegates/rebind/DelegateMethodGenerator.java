@@ -60,9 +60,7 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
     public boolean canGenerate(MethodContext methodContext) {
         setContext(methodContext);
 
-        JType returnType = getMethod().getReturnType();
-
-        return (returnType.isClass() != null || returnType.isPrimitive() != null)
+        return hasValidReturnType()
                 && hasExactlyOneHttpVerb()
                 && canGenerateAction();
     }
@@ -147,7 +145,7 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
         if (primitiveType != null) {
             classType = convertPrimitiveToBoxed(primitiveType);
         } else {
-            classType = returnType.isClass();
+            classType = returnType.isClassOrInterface();
         }
 
         return classType;
@@ -163,5 +161,20 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
         }
 
         return boxedType;
+    }
+
+    private boolean hasValidReturnType() {
+        JType returnType = getMethod().getReturnType();
+
+        if (returnType != null) {
+            JClassType restActionType = findType(RestAction.class);
+            JClassType classType = returnType.isClassOrInterface();
+            JPrimitiveType primitiveType = returnType.isPrimitive();
+
+            return (classType != null && restActionType != null && !classType.isAssignableTo(restActionType))
+                    || primitiveType != null;
+        }
+
+        return false;
     }
 }
