@@ -1,0 +1,7 @@
+    @Override
+    public RestAction<$resultType> ${methodName}(#generateMethodSignature($parameters)) {
+        RestAction<$resultType> action = resource.${methodName}(#generateCallSignature($parameters));
+        execute(action);
+
+        return action;
+    }
