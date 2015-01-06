@@ -6,5 +6,7 @@
     }
 
     RestAction<$resultType> ${actionMethodName}(#generateMethodSignature($methodParameters)) {
-        return new ${action.className}(defaultDateFormat#generateAppendedCallSignature($actionParameters));
+        return new ${action.className}(
+                httpParameterFactory,
+                defaultDateFormat#generateAppendedCallSignature($actionParameters));
     }
