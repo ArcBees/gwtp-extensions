@@ -25,6 +25,8 @@
         <mockito.version>1.10.8</mockito.version>
 
         <maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
+        <checkstyle.version>6.2</checkstyle.version>
+        <arcbees-checkstyle.version>1.0-SNAPSHOT</arcbees-checkstyle.version>
     </properties>
 
     <dependencies>
@@ -75,9 +77,8 @@
                 <version>${maven-checkstyle-plugin.version}</version>
 
                 <configuration>
-                    <configLocation>/gwtp-checkstyle.xml</configLocation>
-                    <suppressionsLocation>/gwtp-suppressions.xml</suppressionsLocation>
-                    <propertiesLocation>/gwtp-checkstyle.properties</propertiesLocation>
+                    <configLocation>/checkstyle.xml</configLocation>
+                    <suppressionsLocation>/suppressions.xml</suppressionsLocation>
                     <propertyExpansion>basedir=${basedir}</propertyExpansion>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
@@ -87,9 +88,14 @@
 
                 <dependencies>
                     <dependency>
-                        <groupId>com.gwtplatform</groupId>
-                        <artifactId>gwtp-build-tools</artifactId>
-                        <version>${gwtp.version}</version>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.arcbees</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${arcbees-checkstyle.version}</version>
                     </dependency>
                 </dependencies>
 
