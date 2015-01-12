@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -26,6 +26,31 @@
 
         <maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
     </properties>
+
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:ArcBees/gwtp-extensions.git</connection>
+        <developerConnection>scm:git:git@github.com:ArcBees/gwtp-extensions.git</developerConnection>
+        <url>https://github.com/ArcBees/gwtp-extensions</url>
+    </scm>
+
+    <issueManagement>
+        <url>https://github.com/ArcBees/gwtp-extensions/issues</url>
+        <system>Github Issues</system>
+    </issueManagement>
+
+    <ciManagement>
+        <system>Team City</system>
+        <url>http://teamcity.arcbees.com/project.html?projectId=Gwtp_GwtpExtensions_RestDispatchDelegates</url>
+    </ciManagement>
 
     <dependencies>
         <dependency>
