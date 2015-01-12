@@ -10,7 +10,7 @@
 
     <groupId>com.gwtplatform.extensions</groupId>
     <artifactId>dispatch-rest-delegates</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Rest-Dispatch Resource Delegates</name>
     <description>Allow Rest-Dispatch resources to return their raw result type directly.</description>
