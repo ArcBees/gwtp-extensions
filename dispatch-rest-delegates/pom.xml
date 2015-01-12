@@ -20,7 +20,7 @@
     <url>http://arcbees.github.io/GWTP/</url>
 
     <properties>
-        <gwtp.version>1.4-SNAPSHOT</gwtp.version>
+        <gwtp.version>1.4</gwtp.version>
         <gwt.version>2.7.0</gwt.version>
         <mockito.version>1.10.8</mockito.version>
 
