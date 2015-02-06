@@ -30,7 +30,6 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.TypeOracleException;
 import com.gwtplatform.dispatch.rest.rebind.Parameter;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionContext;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionDefinition;
@@ -40,6 +39,8 @@ import com.gwtplatform.dispatch.rest.rebind.resource.MethodContext;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
+
+import static com.gwtplatform.dispatch.rest.rebind.utils.JPrimitives.classTypeOrConvertToBoxed;
 
 public class DelegateMethodGenerator extends ActionMethodGenerator {
     private static final String TEMPLATE = "com/gwtplatform/dispatch/rest/delegates/rebind/DelegateMethod.vm";
@@ -71,7 +72,7 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
 
         List<Parameter> parameters = resolveParameters();
         List<Parameter> inheritedParameters = resolveInheritedParameters();
-        JClassType resultType = parseResultType();
+        JClassType resultType = classTypeOrConvertToBoxed(getContext().getTypeOracle(), getMethod().getReturnType());
         String returnValue = resolveReturnValue();
         String actionMethodName = getMethod().getName() + ACTION_METHOD_SUFFIX;
 
@@ -135,32 +136,6 @@ public class DelegateMethodGenerator extends ActionMethodGenerator {
         mergeTemplate(writer);
 
         methodDefinition.setOutput(writer.toString());
-    }
-
-    private JClassType parseResultType() throws UnableToCompleteException {
-        JType returnType = getMethod().getReturnType();
-        JPrimitiveType primitiveType = returnType.isPrimitive();
-        JClassType classType;
-
-        if (primitiveType != null) {
-            classType = convertPrimitiveToBoxed(primitiveType);
-        } else {
-            classType = returnType.isClassOrInterface();
-        }
-
-        return classType;
-    }
-
-    private JClassType convertPrimitiveToBoxed(JPrimitiveType primitive) throws UnableToCompleteException {
-        JClassType boxedType = null;
-        try {
-            String boxedSourceName = primitive.getQualifiedBoxedSourceName();
-            boxedType = getContext().getTypeOracle().parse(boxedSourceName).isClass();
-        } catch (TypeOracleException e) {
-            getLogger().die("Unable to convert '%s' to a boxed type.", primitive);
-        }
-
-        return boxedType;
     }
 
     private boolean hasValidReturnType() {
