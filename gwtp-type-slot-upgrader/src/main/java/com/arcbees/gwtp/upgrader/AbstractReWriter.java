@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+ 
 package com.arcbees.gwtp.upgrader;
 
 import java.io.File;
@@ -36,7 +37,6 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.expr.QualifiedNameExpr;
 
 public abstract class AbstractReWriter {
-
     private final static Logger LOGGER = Logger.getGlobal();
     private CompilationUnit compilationUnit;
     private List<ImportDeclaration> imports;
@@ -56,26 +56,6 @@ public abstract class AbstractReWriter {
             e.printStackTrace();
         }
     }
-
-    private void reWrite(File file, CompilationUnit cu) {
-        try {
-            FileUtils.writeStringToFile(file, cu.toString());
-        } catch (IOException e) {
-            LOGGER.severe(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    abstract void processCompilationUnit();
-
-    final boolean processCompilationUnit(CompilationUnit cu) {
-        this.enclosingClassName = null;
-        this.hasChanged = false;
-        this.compilationUnit = cu;
-        this.imports = compilationUnit.getImports();
-        processCompilationUnit();
-        return hasChanged();
-    };
 
     protected void addImports(String... names) {
         for (String name : names) {
@@ -139,10 +119,6 @@ public abstract class AbstractReWriter {
         return compilationUnit;
     }
 
-    boolean hasChanged() {
-        return hasChanged;
-    }
-
     protected void markChanged() {
         hasChanged = true;
     }
@@ -159,5 +135,29 @@ public abstract class AbstractReWriter {
             }
         }
         return enclosingClassName;
+    }
+
+    abstract void processCompilationUnit();
+
+    final boolean processCompilationUnit(CompilationUnit cu) {
+        this.enclosingClassName = null;
+        this.hasChanged = false;
+        this.compilationUnit = cu;
+        this.imports = compilationUnit.getImports();
+        processCompilationUnit();
+        return hasChanged();
+    };
+
+    boolean hasChanged() {
+        return hasChanged;
+    }
+
+    private void reWrite(File file, CompilationUnit cu) {
+        try {
+            FileUtils.writeStringToFile(file, cu.toString());
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
