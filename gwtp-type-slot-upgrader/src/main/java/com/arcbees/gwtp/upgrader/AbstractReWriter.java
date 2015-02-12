@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
- 
+
 package com.arcbees.gwtp.upgrader;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.expr.QualifiedNameExpr;
 
 public abstract class AbstractReWriter {
-    private final static Logger LOGGER = Logger.getGlobal();
+    private static final Logger LOGGER = Logger.getGlobal();
     private CompilationUnit compilationUnit;
     private List<ImportDeclaration> imports;
     private boolean hasChanged;
@@ -127,8 +127,10 @@ public abstract class AbstractReWriter {
         if (enclosingClassName == null) {
             for (Node node : compilationUnit.getChildrenNodes()) {
                 if (node instanceof ClassOrInterfaceDeclaration) {
-                    QualifiedNameExpr packageName = (QualifiedNameExpr) compilationUnit.getPackage().getName();
-                    String fqName = packageName.getQualifier() + "." + packageName.getName() + "." + ((ClassOrInterfaceDeclaration) node).getName();
+                    QualifiedNameExpr packageName = (QualifiedNameExpr) compilationUnit
+                            .getPackage().getName();
+                    String fqName = packageName.getQualifier() + "." + packageName.getName() + "."
+                            + ((ClassOrInterfaceDeclaration) node).getName();
                     enclosingClassName = fqName;
                     break;
                 }
@@ -146,7 +148,7 @@ public abstract class AbstractReWriter {
         this.imports = compilationUnit.getImports();
         processCompilationUnit();
         return hasChanged();
-    };
+    }
 
     boolean hasChanged() {
         return hasChanged;

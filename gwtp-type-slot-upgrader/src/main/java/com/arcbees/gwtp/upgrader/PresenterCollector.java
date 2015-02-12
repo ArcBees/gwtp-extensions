@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
- 
+
 package com.arcbees.gwtp.upgrader;
 
 import java.util.HashMap;
@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
@@ -29,15 +28,12 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 
-public class PresenterCollector extends AbstractReWriter{
-    
-    private static final Logger LOGGER = Logger.getGlobal();
+public class PresenterCollector extends AbstractReWriter {
 
     private HashMap<String, String> extendsMap = new HashMap<>();
 
     public Set<String> getPresenters() {
-        return getAllClassesThatExtend(
-                "com.gwtplatform.mvp.client.PresenterWidget",
+        return getAllClassesThatExtend("com.gwtplatform.mvp.client.PresenterWidget",
                 "com.gwtplatform.mvp.client.Presenter",
                 "com.gwtplatform.mvp.client.TabContainerPresenter");
     }
@@ -45,9 +41,8 @@ public class PresenterCollector extends AbstractReWriter{
     void processCompilationUnit() {
         for (TypeDeclaration t : getCompilationUnit().getTypes()) {
             if (t instanceof ClassOrInterfaceDeclaration) {
-                processClassOrInterface(getCompilationUnit().getImports(),
-                        getCompilationUnit().getPackage(),
-                        (ClassOrInterfaceDeclaration) t);
+                processClassOrInterface(getCompilationUnit().getImports(), getCompilationUnit()
+                        .getPackage(), (ClassOrInterfaceDeclaration) t);
             }
         }
     }
@@ -67,13 +62,11 @@ public class PresenterCollector extends AbstractReWriter{
     }
 
     private void processClassOrInterface(List<ImportDeclaration> imports,
-            PackageDeclaration packageDeclaration,
-            ClassOrInterfaceDeclaration cOrI) {
+            PackageDeclaration packageDeclaration, ClassOrInterfaceDeclaration cOrI) {
         if (imports == null) {
             return;
         }
-        String fullyQualified = packageDeclaration.getName().toString() + "."
-                + cOrI.getName();
+        String fullyQualified = packageDeclaration.getName().toString() + "." + cOrI.getName();
         if (cOrI.getExtends() != null) {
             for (ClassOrInterfaceType ext : cOrI.getExtends()) {
                 for (ImportDeclaration i : imports) {

@@ -13,19 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
- 
+
 package com.arcbees.gwtp.upgrader;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
@@ -38,8 +35,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -47,28 +42,28 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class Upgrader extends JPanel {
-    
+
     private static final Logger LOGGER = Logger.getGlobal();
 
     private static final long serialVersionUID = 1L;
-    
+
     JTextField fileTextField = new JTextField();
 
     private JRadioButton v2;
 
     private JProgressBar progressBar;
-    
+
     private Label progressLabel;
 
     public Upgrader() {
         super(new BorderLayout(10, 10));
-        
+
         setPreferredSize(new Dimension(600, 400));
-        
+
         addBackupWarning();
-        
+
         JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
-        
+
         add(centerPanel, BorderLayout.CENTER);
 
         addOpenDialog(centerPanel);
@@ -82,20 +77,12 @@ public class Upgrader extends JPanel {
         panel.setBorder(new EmptyBorder(15, 15, 35, 15));
         progressLabel = new Label();
         panel.add(progressLabel, BorderLayout.PAGE_START);
-        
-        progressBar = new JProgressBar();
-        
-        panel.add(progressBar, BorderLayout.PAGE_END);
-        
-        add(panel, BorderLayout.PAGE_END);
-    }
 
-    private void initLogger() {
-        JTextArea log = new JTextArea(5,20);
-        log.setMargin(new Insets(5,5,5,5));
-        log.setEditable(false);
-        LOGGER.addHandler(new TextComponentLogger(log));
-        add(new JScrollPane(log), BorderLayout.PAGE_END);
+        progressBar = new JProgressBar();
+
+        panel.add(progressBar, BorderLayout.PAGE_END);
+
+        add(panel, BorderLayout.PAGE_END);
     }
 
     private void addRunButton(JPanel container) {
@@ -116,9 +103,9 @@ public class Upgrader extends JPanel {
                 }
             }
         });
-        
+
         fileTextField.getDocument().addDocumentListener(new DocumentListener() {
-            
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 runButton.setEnabled(!fileTextField.getText().isEmpty());
@@ -128,7 +115,7 @@ public class Upgrader extends JPanel {
             public void insertUpdate(DocumentEvent e) {
                 runButton.setEnabled(!fileTextField.getText().isEmpty());
             }
-            
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 runButton.setEnabled(!fileTextField.getText().isEmpty());
@@ -137,21 +124,21 @@ public class Upgrader extends JPanel {
     }
 
     private void addVersionChoice(JPanel container) {
-        
+
         JPanel panel = new JPanel();
         panel.setBorder(new TitledBorder("Choose target version"));
-        
-         v2 = new JRadioButton("GWTP 1.5");
-         JRadioButton v1 = new JRadioButton("GWTP 1.4 and below");
-         ButtonGroup bG = new ButtonGroup();
 
-         bG.add(v2);
-         bG.add(v1);
+        v2 = new JRadioButton("GWTP 1.5");
+        JRadioButton v1 = new JRadioButton("GWTP 1.4 and below");
+        ButtonGroup bG = new ButtonGroup();
 
-         panel.add(v2);
-         panel.add(v1);
-         v2.setSelected(true);
-         container.add(panel, BorderLayout.CENTER);
+        bG.add(v2);
+        bG.add(v1);
+
+        panel.add(v2);
+        panel.add(v1);
+        v2.setSelected(true);
+        container.add(panel, BorderLayout.CENTER);
     }
 
     private void addOpenDialog(JPanel container) {
@@ -160,14 +147,14 @@ public class Upgrader extends JPanel {
         outer.setLayout(new BorderLayout(10, 10));
 
         JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setBorder(new EmptyBorder(new Insets(5,5,5,5)));
+        panel.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
         JButton openButton = new JButton("Browse");
 
         openButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 LOGGER.info("Showing file dialog");
                 final JFileChooser fileChooser = new JFileChooser();
-                
+
                 fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
                 if (fileChooser.showOpenDialog(Upgrader.this) == JFileChooser.APPROVE_OPTION) {
@@ -189,13 +176,14 @@ public class Upgrader extends JPanel {
         JEditorPane warning = new JEditorPane();
         warning.setContentType("text/html");
 
-        warning.setText("<h2 align='center'>This program will overwrite files in your project!</h2><h3 align='center'>Backup your project before running it!</h3>");
+        warning.setText("<h2 align='center'>This program will overwrite files in your project!</h2>"
+                + "<h3 align='center'>Backup your project before running it!</h3>");
         add(warning, BorderLayout.PAGE_START);
     }
 
-    private static void createAndShowGUI() {
+    private static void createAndShowGui() {
         final JFrame frame = new JFrame("GWTP Upgrader");
-        
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JComponent newContentPane = new Upgrader();
@@ -214,7 +202,7 @@ public class Upgrader extends JPanel {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI();
+                createAndShowGui();
             }
         });
     }
