@@ -16,9 +16,9 @@
 
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.resource.ResourceDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
@@ -43,6 +43,6 @@ public class DelegateDefinition extends ClassDefinition {
     }
 
     public List<MethodDefinition> getMethodDefinitions() {
-        return Lists.newArrayList(methodDefinitions);
+        return new ArrayList<MethodDefinition>(methodDefinitions);
     }
 }
