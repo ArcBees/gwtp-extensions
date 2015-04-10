@@ -17,18 +17,17 @@
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 
 import org.apache.velocity.app.VelocityEngine;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
@@ -42,6 +41,7 @@ import com.gwtplatform.dispatch.rest.rebind.resource.MethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodGenerator;
 import com.gwtplatform.dispatch.rest.rebind.resource.ResourceDefinition;
 import com.gwtplatform.dispatch.rest.rebind.utils.ClassDefinition;
+import com.gwtplatform.dispatch.rest.rebind.utils.EventBus;
 import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 
@@ -72,7 +72,7 @@ public class DelegateGenerator extends AbstractVelocityGenerator
 
         this.eventBus = eventBus;
         this.methodGenerators = methodGenerators;
-        this.generatedDelegates = Lists.newArrayList();
+        this.generatedDelegates = new ArrayList<ClassDefinition>();
     }
 
     @Override
@@ -86,12 +86,12 @@ public class DelegateGenerator extends AbstractVelocityGenerator
     public DelegateDefinition generate(ResourceDefinition resourceDefinition) throws UnableToCompleteException {
         this.resourceDefinition = resourceDefinition;
 
-        imports = Sets.newTreeSet();
+        imports = new TreeSet<String>();
         imports.add(RestAction.class.getName());
         imports.add(resourceDefinition.getResourceInterface().getQualifiedSourceName());
         imports.add(resourceDefinition.getQualifiedName());
 
-        methodDefinitions = Lists.newArrayList();
+        methodDefinitions = new ArrayList<MethodDefinition>();
 
         generateMethods();
 

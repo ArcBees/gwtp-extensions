@@ -22,9 +22,14 @@
         <gwt.version>2.7.0</gwt.version>
         <mockito.version>1.10.8</mockito.version>
 
+        <maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
         <maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
         <checkstyle.version>6.2</checkstyle.version>
-        <arcbees-checkstyle.version>1.0-SNAPSHOT</arcbees-checkstyle.version>
+        <arcbees-checkstyle.version>1.2</arcbees-checkstyle.version>
+
+        <target.jdk>1.6</target.jdk>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <licenses>
@@ -94,6 +99,18 @@
         </resources>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+
+                <configuration>
+                    <source>${target.jdk}</source>
+                    <target>${target.jdk}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

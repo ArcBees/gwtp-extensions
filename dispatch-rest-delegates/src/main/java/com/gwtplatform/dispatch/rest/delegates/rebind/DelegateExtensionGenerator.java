@@ -16,12 +16,12 @@
 
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.common.collect.Lists;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.gwtplatform.dispatch.rest.rebind.AbstractGenerator;
@@ -57,7 +57,7 @@ public class DelegateExtensionGenerator extends AbstractGenerator implements Ext
 
     @Override
     public Collection<ClassDefinition> generate(ExtensionContext context) throws UnableToCompleteException {
-        definitions = Lists.newArrayList();
+        definitions = new ArrayList<ClassDefinition>();
 
         generate(context.getResourceDefinitions());
 
