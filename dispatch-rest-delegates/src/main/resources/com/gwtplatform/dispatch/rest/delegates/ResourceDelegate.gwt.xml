@@ -6,4 +6,8 @@
 
     <extend-configuration-property name="gwtp.dispatch.rest.generatorModules"
             value="com.gwtplatform.dispatch.rest.delegates.rebind.DelegateModule"/>
+
+    <generate-with class="com.gwtplatform.dispatch.rest.delegates.rebind.fallback.ResourceDelegateFallbackGenerator">
+        <when-type-assignable class="com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate"/>
+    </generate-with>
 </module>

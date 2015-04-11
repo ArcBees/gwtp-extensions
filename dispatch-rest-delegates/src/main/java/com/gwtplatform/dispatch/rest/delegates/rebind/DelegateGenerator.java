@@ -127,6 +127,8 @@ public class DelegateGenerator extends AbstractVelocityGenerator
         JClassType resourceInterface = resourceDefinition.getResourceInterface();
 
         variables.put("resourceType", new ClassDefinition(resourceInterface).getParameterizedClassName());
+        variables.put("resourceImplType", resourceDefinition.getParameterizedClassName());
+        variables.put("isSubResource", isSubResource());
         variables.put("methods", methodDefinitions);
         variables.put("imports", imports);
     }
