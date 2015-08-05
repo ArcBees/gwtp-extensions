@@ -59,13 +59,6 @@ public abstract class AbstractDelegatedMethodGenerator extends AbstractVelocityG
         return getMethodDefinition().getMethod();
     }
 
-    protected void replaceMethodContent(StringBuilder methodBuilder, String newContent) {
-        int openBraceIndex = methodBuilder.indexOf("{");
-        int closeBraceIndex = methodBuilder.lastIndexOf("}");
-
-        methodBuilder.replace(openBraceIndex + 1, closeBraceIndex, newContent);
-    }
-
     @Override
     protected String getImplName() {
         return getResourceDefinition() + DelegateGenerator.IMPL + "#" + getMethod().getName();

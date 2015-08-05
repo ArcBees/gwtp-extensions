@@ -17,6 +17,7 @@
 package com.gwtplatform.dispatch.rest.delegates.rebind;
 
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -26,6 +27,7 @@ import org.apache.velocity.app.VelocityEngine;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.gwtplatform.dispatch.rest.rebind.Parameter;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionDefinition;
 import com.gwtplatform.dispatch.rest.rebind.action.ActionMethodDefinition;
 import com.gwtplatform.dispatch.rest.rebind.resource.MethodContext;
@@ -34,13 +36,19 @@ import com.gwtplatform.dispatch.rest.rebind.utils.Logger;
 
 public class DelegatedActionMethodGenerator extends AbstractDelegatedMethodGenerator {
     private static final String TEMPLATE = "com/gwtplatform/dispatch/rest/delegates/rebind/DelegatedActionMethod.vm";
+    private static final String DEFAULT_ACTION_VARIABLE_NAME = "action";
+
+    private final VariableNameProvider variableNameProvider;
 
     @Inject
     DelegatedActionMethodGenerator(
             Logger logger,
             GeneratorContext context,
-            VelocityEngine velocityEngine) {
+            VelocityEngine velocityEngine,
+            VariableNameProvider variableNameProvider) {
         super(logger, context, velocityEngine);
+
+        this.variableNameProvider = variableNameProvider;
     }
 
     @Override
@@ -70,6 +78,7 @@ public class DelegatedActionMethodGenerator extends AbstractDelegatedMethodGener
         variables.put("resultType", resultType.getParameterizedQualifiedSourceName());
         variables.put("methodName", getMethod().getName());
         variables.put("parameters", getMethodDefinition().getParameters());
+        variables.put("actionVariableName", getValidActionVariableName());
     }
 
     @Override
@@ -80,5 +89,11 @@ public class DelegatedActionMethodGenerator extends AbstractDelegatedMethodGener
     @Override
     protected String getTemplate() {
         return TEMPLATE;
+    }
+
+    private String getValidActionVariableName() {
+        List<Parameter> parameters = getMethodDefinition().getParameters();
+
+        return variableNameProvider.getVariableName(parameters, DEFAULT_ACTION_VARIABLE_NAME);
     }
 }
