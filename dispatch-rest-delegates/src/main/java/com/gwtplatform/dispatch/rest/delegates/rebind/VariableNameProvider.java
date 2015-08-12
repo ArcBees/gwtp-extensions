@@ -25,8 +25,8 @@ public class VariableNameProvider {
         return getVariableName(parameters, defaultName, 0);
     }
 
-    private String getVariableName(List<Parameter> parameters, final String defaultName, final int index) {
-        final String suffix = index == 0 ? "" : String.valueOf(index);
+    private String getVariableName(List<Parameter> parameters, String defaultName, int index) {
+        String suffix = index == 0 ? "" : String.valueOf(index);
 
         String variableName = defaultName + suffix;
         String existingVariable = tryFind(parameters, variableName);
