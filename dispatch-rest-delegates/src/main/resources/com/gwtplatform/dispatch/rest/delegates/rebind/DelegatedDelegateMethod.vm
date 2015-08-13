@@ -1,7 +1,6 @@
     @Override
     public $returnType ${methodName}(#generateMethodSignature($parameters)) {
-        RestAction<$resultType> action = (($resourceImplType) resource).${actionMethodName}(#generateCallSignature($parameters));
-        execute(action);
+        execute((($resourceImplType) resource).${actionMethodName}(#generateCallSignature($parameters)));
 #if($returnValue)
 
         return $returnValue;
