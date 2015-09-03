@@ -18,7 +18,7 @@
     <url>http://arcbees.github.io/GWTP/</url>
 
     <properties>
-        <gwtp.version>1.5</gwtp.version>
+        <gwtp.version>1.6-SNAPSHOT</gwtp.version>
         <gwt.version>2.7.0</gwt.version>
         <mockito.version>1.10.8</mockito.version>
         <junit.version>4.12</junit.version>
