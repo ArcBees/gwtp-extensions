@@ -28,7 +28,7 @@
         <checkstyle.version>6.2</checkstyle.version>
         <arcbees-checkstyle.version>1.2</arcbees-checkstyle.version>
 
-        <target.jdk>1.6</target.jdk>
+        <target.jdk>1.7</target.jdk>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
