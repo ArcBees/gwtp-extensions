@@ -74,11 +74,13 @@ public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> 
     }
 
     private void createBinding(Delegate delegate) {
-        Type superType = new Type(ResourceDelegate.class, Arrays.asList(delegate.getResourceType()));
-        BindingContext bindingContext =
-                new BindingContext(REST_GIN_MODULE, delegate.getType(), superType, Singleton.class);
+        if (delegate.isRootResource()) {
+            Type superType = new Type(ResourceDelegate.class, Arrays.asList(delegate.getResourceType()));
+            BindingContext bindingContext =
+                    new BindingContext(REST_GIN_MODULE, delegate.getType(), superType, Singleton.class);
 
-        bindingsProcessors.process(bindingContext);
+            bindingsProcessors.process(bindingContext);
+        }
     }
 
     private void processSubDelegates(Delegate delegate) {
