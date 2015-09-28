@@ -22,8 +22,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.base.MoreObjects;
+import com.gwtplatform.dispatch.rest.delegates.processors.methods.DelegateMethod;
+import com.gwtplatform.dispatch.rest.delegates.processors.methods.DelegateMethodFactories;
 import com.gwtplatform.dispatch.rest.processors.resource.Resource;
 import com.gwtplatform.dispatch.rest.processors.resource.ResourceMethod;
+import com.gwtplatform.dispatch.rest.processors.resource.RootResource;
 import com.gwtplatform.dispatch.rest.processors.subresource.SubResource;
 import com.gwtplatform.dispatch.rest.processors.subresource.SubResourceMethod;
 import com.gwtplatform.processors.tools.domain.HasImports;
@@ -31,14 +34,19 @@ import com.gwtplatform.processors.tools.domain.HasType;
 import com.gwtplatform.processors.tools.domain.Type;
 
 public class Delegate implements HasType, HasImports {
-    private static final String SIMPLE_NAME_SUFFIX = "$$Delegate";
+    public static final String DELEGATE_SUFFIX = "$$Delegate";
 
+    private final DelegateMethodFactories delegateMethodFactories;
     private final Resource resource;
 
     private Type type;
+    private List<DelegateMethod> methods;
     private List<Delegate> subDelegates;
 
-    public Delegate(Resource resource) {
+    public Delegate(
+            DelegateMethodFactories delegateMethodFactories,
+            Resource resource) {
+        this.delegateMethodFactories = delegateMethodFactories;
         this.resource = resource;
     }
 
@@ -50,14 +58,46 @@ public class Delegate implements HasType, HasImports {
             type = new Type(
                     resourceType.getPackageName(),
                     resourceType.getEnclosingNames(),
-                    resourceType.getSimpleName() + SIMPLE_NAME_SUFFIX,
+                    resourceType.getSimpleName() + DELEGATE_SUFFIX,
                     resourceType.getTypeArguments());
         }
 
         return type;
     }
 
+    public boolean isRootResource() {
+        return resource instanceof RootResource;
+    }
+
+    public Type getResourceType() {
+        return resource.getResourceType();
+    }
+
+    public List<DelegateMethod> getMethods() {
+        if (methods == null) {
+            processMethods();
+        }
+
+        return methods;
+    }
+
+    private void processMethods() {
+        methods = new ArrayList<>();
+
+        for (ResourceMethod resourceMethod : resource.getMethods()) {
+            processMethod(resourceMethod);
+        }
+
+        methods = Collections.unmodifiableList(methods);
+    }
+
+    private void processMethod(ResourceMethod resourceMethod) {
+        DelegateMethod delegateMethod = delegateMethodFactories.process(resourceMethod);
+        methods.add(delegateMethod);
+    }
+
     public List<Delegate> getSubDelegates() {
+        // TODO: Let SubResourceDelegateMethod + Processor this model
         if (subDelegates == null) {
             processSubResources();
         }
@@ -69,16 +109,16 @@ public class Delegate implements HasType, HasImports {
         subDelegates = new ArrayList<>();
 
         for (ResourceMethod resourceMethod : resource.getMethods()) {
-            processResourceMethod(resourceMethod);
+            processSubResource(resourceMethod);
         }
 
         subDelegates = Collections.unmodifiableList(subDelegates);
     }
 
-    private void processResourceMethod(ResourceMethod resourceMethod) {
+    private void processSubResource(ResourceMethod resourceMethod) {
         if (resourceMethod instanceof SubResourceMethod) {
             SubResource subResource = ((SubResourceMethod) resourceMethod).getSubResource();
-            Delegate subDelegate = new Delegate(subResource);
+            Delegate subDelegate = new Delegate(delegateMethodFactories, subResource);
 
             subDelegates.add(subDelegate);
         }

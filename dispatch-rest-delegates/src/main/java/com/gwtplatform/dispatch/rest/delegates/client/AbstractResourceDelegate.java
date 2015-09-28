@@ -69,12 +69,14 @@ public abstract class AbstractResourceDelegate<T> implements ResourceDelegate<T>
     }
 
     @SuppressWarnings({"unchecked"})
-    protected <R> void execute(RestAction<R> action) {
+    protected <R> RestAction<R> execute(RestAction<R> action) {
         DispatchRequest dispatchRequest = dispatcher.execute(action, (AsyncCallback<R>) callback);
 
         if (delegatingDispatchRequest != null) {
             delegatingDispatchRequest.setDelegate(dispatchRequest);
         }
+
+        return action;
     }
 
     protected void copyFields(AbstractResourceDelegate<?> delegate) {

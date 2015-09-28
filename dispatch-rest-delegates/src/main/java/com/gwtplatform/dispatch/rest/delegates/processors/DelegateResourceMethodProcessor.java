@@ -31,6 +31,8 @@ import static com.gwtplatform.dispatch.rest.processors.NameUtils.qualifiedMethod
 @AutoService(ResourceMethodProcessor.class)
 public class DelegateResourceMethodProcessor extends DispatchRestContextProcessor<ResourceMethod, CodeSnippet>
         implements ResourceMethodProcessor {
+    public static final String METHOD_SUFFIX = "$endPoint";
+
     private static final String TEMPLATE = "/com/gwtplatform/dispatch/rest/delegates/processors/DelegateMethod.vm";
 
     private final EndPointProcessor endPointProcessor;
@@ -48,18 +50,19 @@ public class DelegateResourceMethodProcessor extends DispatchRestContextProcesso
 
     @Override
     public boolean canProcess(ResourceMethod method) {
-        return method instanceof DelegateMethod;
+        return method instanceof DelegateResourceMethod;
     }
 
     @Override
     public CodeSnippet process(ResourceMethod resourceMethod) {
-        DelegateMethod delegateMethod = (DelegateMethod) resourceMethod;
+        DelegateResourceMethod delegateMethod = (DelegateResourceMethod) resourceMethod;
         String methodName = qualifiedMethodName(resourceMethod);
         EndPoint endPoint = delegateMethod.getEndPoint();
 
         logger.debug("Generating end-point method delegate `%s`.", methodName);
 
         CodeSnippet code = outputter.withTemplateFile(TEMPLATE)
+                .withParam("methodSuffix", METHOD_SUFFIX)
                 .withParam("method", delegateMethod.getMethod())
                 .withParam("defaultReturnValue", delegateMethod.getDefaultReturnValue())
                 .withParam("endPointType", endPoint.getType())

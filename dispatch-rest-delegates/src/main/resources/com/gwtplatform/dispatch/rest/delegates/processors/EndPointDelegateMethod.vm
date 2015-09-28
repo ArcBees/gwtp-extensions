@@ -1,0 +1,4 @@
+    @Override
+    public $method.returnType.parameterizedName ${method.name}(#printParameterDefinitions(3 $method.parameters)) {
+        return execute(resource.${method.name}(#printParameterNames(4 $method.parameters)));
+    }

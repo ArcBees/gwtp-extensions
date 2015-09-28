@@ -33,14 +33,14 @@ import com.gwtplatform.processors.tools.utils.Primitives;
 import static com.gwtplatform.processors.tools.utils.Primitives.VOID;
 import static com.gwtplatform.processors.tools.utils.Primitives.findByPrimitive;
 
-public class DelegateMethod implements ResourceMethod {
+public class DelegateResourceMethod implements ResourceMethod {
     private final EndPointMethodFactory endPointMethodFactory;
     private final Resource parentResource;
     private final ExecutableElement element;
 
     private EndPointMethod endPointMethod;
 
-    public DelegateMethod(
+    public DelegateResourceMethod(
             EndPointMethodFactory endPointMethodFactory,
             Resource parentResource,
             ExecutableElement element) {

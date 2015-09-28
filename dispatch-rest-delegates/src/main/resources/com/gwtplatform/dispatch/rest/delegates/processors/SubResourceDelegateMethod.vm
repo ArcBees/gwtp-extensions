@@ -1,0 +1,10 @@
+    @Override
+    public $method.returnType.parameterizedName ${method.name}(#printParameterDefinitions(3 $method.parameters)) {
+        $method.returnType.parameterizedName subResource__internal = resource.${method.name}(#printParameterNames(4 $method.parameters));
+        $subDelegateType.parameterizedName subDelegate__internal
+                = new ${subDelegateType.parameterizedName}(dispatcher, subResource__internal);
+
+        copyFields(subDelegate__internal);
+
+        return subDelegate__internal;
+    }

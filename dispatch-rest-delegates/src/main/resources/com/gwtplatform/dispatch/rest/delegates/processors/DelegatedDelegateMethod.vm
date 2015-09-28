@@ -1,0 +1,8 @@
+    @Override
+    public $method.returnType.parameterizedName ${method.name}(#printParameterDefinitions(3 $method.parameters)) {
+        execute((($resourceImplType.parameterizedName) resource).${method.name}${methodSuffix}(#printParameterNames(4 $method.parameters)));
+#if($defaultReturnValue)
+
+        return $defaultReturnValue;
+#end
+    }

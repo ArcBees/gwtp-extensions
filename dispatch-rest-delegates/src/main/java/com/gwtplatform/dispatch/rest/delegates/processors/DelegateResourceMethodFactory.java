@@ -28,14 +28,14 @@ import com.gwtplatform.processors.tools.logger.Logger;
 import com.gwtplatform.processors.tools.utils.Utils;
 
 @AutoService(ResourceMethodFactory.class)
-public class DelegateMethodFactory implements ResourceMethodFactory<DelegateMethod> {
+public class DelegateResourceMethodFactory implements ResourceMethodFactory<DelegateResourceMethod> {
     private ResourceMethodUtils resourceMethodUtils;
     private EndPointMethodFactory endPointMethodFactory;
 
     /**
      * Explicit constructor required by the Service Loader.
      */
-    public DelegateMethodFactory() {
+    public DelegateResourceMethodFactory() {
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DelegateMethodFactory implements ResourceMethodFactory<DelegateMeth
     }
 
     @Override
-    public DelegateMethod create(Resource parentResource, ExecutableElement element) {
-        return new DelegateMethod(endPointMethodFactory, parentResource, element);
+    public DelegateResourceMethod create(Resource parentResource, ExecutableElement element) {
+        return new DelegateResourceMethod(endPointMethodFactory, parentResource, element);
     }
 }
