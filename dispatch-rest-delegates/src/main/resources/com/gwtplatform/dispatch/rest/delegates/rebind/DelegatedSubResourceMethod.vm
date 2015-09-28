@@ -1,9 +1,0 @@
-    @Override
-    public $subResourceType ${methodName}(#generateMethodSignature($parameters)) {
-        $subResourceType subResource = resource.${methodName}(#generateCallSignature($parameters));
-        $subDelegateType subDelegate = new ${subDelegateType}(dispatcher, subResource);
-
-        copyFields(subDelegate);
-
-        return subDelegate;
-    }

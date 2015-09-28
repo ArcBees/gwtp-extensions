@@ -1,8 +1,0 @@
-    @Override
-    public $returnType ${methodName}(#generateMethodSignature($parameters)) {
-        execute((($resourceImplType) resource).${actionMethodName}(#generateCallSignature($parameters)));
-#if($returnValue)
-
-        return $returnValue;
-#end
-    }
