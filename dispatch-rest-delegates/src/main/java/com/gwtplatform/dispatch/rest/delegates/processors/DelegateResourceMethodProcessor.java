@@ -16,15 +16,16 @@
 
 package com.gwtplatform.dispatch.rest.delegates.processors;
 
-import javax.annotation.processing.ProcessingEnvironment;
-
 import com.google.auto.service.AutoService;
 import com.gwtplatform.dispatch.rest.processors.DispatchRestContextProcessor;
 import com.gwtplatform.dispatch.rest.processors.endpoint.EndPoint;
 import com.gwtplatform.dispatch.rest.processors.endpoint.EndPointProcessor;
 import com.gwtplatform.dispatch.rest.processors.resource.ResourceMethod;
 import com.gwtplatform.dispatch.rest.processors.resource.ResourceMethodProcessor;
+import com.gwtplatform.processors.tools.logger.Logger;
 import com.gwtplatform.processors.tools.outputter.CodeSnippet;
+import com.gwtplatform.processors.tools.outputter.Outputter;
+import com.gwtplatform.processors.tools.utils.Utils;
 
 import static com.gwtplatform.dispatch.rest.processors.NameUtils.qualifiedMethodName;
 
@@ -42,10 +43,10 @@ public class DelegateResourceMethodProcessor extends DispatchRestContextProcesso
     }
 
     @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
+    public synchronized void init(Logger logger, Utils utils, Outputter outputter) {
+        super.init(logger, utils, outputter);
 
-        endPointProcessor.init(processingEnv);
+        endPointProcessor.init(logger, utils, outputter);
     }
 
     @Override

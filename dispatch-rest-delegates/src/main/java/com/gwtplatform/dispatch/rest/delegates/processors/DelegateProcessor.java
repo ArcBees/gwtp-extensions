@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.inject.Singleton;
 
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -30,7 +29,10 @@ import com.gwtplatform.processors.tools.AbstractContextProcessor;
 import com.gwtplatform.processors.tools.bindings.BindingContext;
 import com.gwtplatform.processors.tools.bindings.BindingsProcessors;
 import com.gwtplatform.processors.tools.domain.Type;
+import com.gwtplatform.processors.tools.logger.Logger;
 import com.gwtplatform.processors.tools.outputter.CodeSnippet;
+import com.gwtplatform.processors.tools.outputter.Outputter;
+import com.gwtplatform.processors.tools.utils.Utils;
 
 import static com.gwtplatform.dispatch.rest.processors.NameUtils.REST_GIN_MODULE;
 
@@ -41,11 +43,14 @@ public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> 
     private final DelegateMethodProcessors delegateMethodProcessors;
     private final Set<Type> processedDelegateTypes;
 
-    public DelegateProcessor(ProcessingEnvironment environment) {
-        init(environment);
+    public DelegateProcessor(
+            Logger logger,
+            Utils utils,
+            Outputter outputter) {
+        init(logger, utils, outputter);
 
-        bindingsProcessors = new BindingsProcessors(environment);
-        delegateMethodProcessors = new DelegateMethodProcessors(environment);
+        bindingsProcessors = new BindingsProcessors(logger, utils, outputter);
+        delegateMethodProcessors = new DelegateMethodProcessors(logger, utils, outputter);
         processedDelegateTypes = new HashSet<>();
     }
 

@@ -19,13 +19,13 @@ package com.gwtplatform.dispatch.rest.delegates.processors.methods;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import javax.annotation.processing.ProcessingEnvironment;
-
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.gwtplatform.processors.tools.exceptions.UnableToProcessException;
 import com.gwtplatform.processors.tools.logger.Logger;
 import com.gwtplatform.processors.tools.outputter.CodeSnippet;
+import com.gwtplatform.processors.tools.outputter.Outputter;
+import com.gwtplatform.processors.tools.utils.Utils;
 
 public class DelegateMethodProcessors {
     private static final String NO_PROCESSORS_FOUND = "Can not find a delegate method processor for `%s`.";
@@ -33,12 +33,17 @@ public class DelegateMethodProcessors {
     private static ServiceLoader<DelegateMethodProcessor> processors;
     private static boolean initialized;
 
-    private final ProcessingEnvironment environment;
     private final Logger logger;
+    private final Utils utils;
+    private final Outputter outputter;
 
-    public DelegateMethodProcessors(ProcessingEnvironment environment) {
-        this.environment = environment;
-        this.logger = new Logger(environment.getMessager(), environment.getOptions());
+    public DelegateMethodProcessors(
+            Logger logger,
+            Utils utils,
+            Outputter outputter) {
+        this.logger = logger;
+        this.utils = utils;
+        this.outputter = outputter;
 
         if (processors == null) {
             processors = ServiceLoader.load(DelegateMethodProcessor.class, getClass().getClassLoader());
@@ -72,7 +77,7 @@ public class DelegateMethodProcessors {
     private void ensureInitialized() {
         if (!initialized) {
             for (DelegateMethodProcessor processor : processors) {
-                processor.init(environment);
+                processor.init(logger, utils, outputter);
             }
 
             initialized = true;

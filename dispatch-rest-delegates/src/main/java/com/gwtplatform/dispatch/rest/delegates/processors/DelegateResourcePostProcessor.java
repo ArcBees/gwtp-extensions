@@ -16,13 +16,12 @@
 
 package com.gwtplatform.dispatch.rest.delegates.processors;
 
-import javax.annotation.processing.ProcessingEnvironment;
-
 import com.google.auto.service.AutoService;
 import com.gwtplatform.dispatch.rest.delegates.processors.methods.DelegateMethodFactories;
 import com.gwtplatform.dispatch.rest.processors.resource.ResourcePostProcessor;
 import com.gwtplatform.dispatch.rest.processors.resource.RootResource;
 import com.gwtplatform.processors.tools.logger.Logger;
+import com.gwtplatform.processors.tools.outputter.Outputter;
 import com.gwtplatform.processors.tools.utils.Utils;
 
 @AutoService(ResourcePostProcessor.class)
@@ -31,12 +30,9 @@ public class DelegateResourcePostProcessor implements ResourcePostProcessor {
     private DelegateMethodFactories delegateMethodFactories;
 
     @Override
-    public void init(ProcessingEnvironment environment) {
-        Logger logger = new Logger(environment.getMessager(), environment.getOptions());
-        Utils utils = new Utils(environment.getTypeUtils(), environment.getElementUtils());
-
+    public void init(Logger logger, Utils utils, Outputter outputter) {
         delegateMethodFactories = new DelegateMethodFactories(logger, utils);
-        delegateProcessor = new DelegateProcessor(environment);
+        delegateProcessor = new DelegateProcessor(logger, utils, outputter);
     }
 
     @Override
