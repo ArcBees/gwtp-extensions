@@ -36,6 +36,11 @@ $method.output
     }
 
     @Override
+    public $resourceType getResource() {
+        return resource;
+    }
+
+    @Override
     protected $impl newInstance() {
         return new ${impl}(dispatcher, resource);
     }
