@@ -90,4 +90,9 @@ public interface ResourceDelegate<T> {
      * This method is the same as colling {@link #withCallback(AsyncCallback)} with a no-op callback.
      */
     T withoutCallback();
+
+    /**
+     * Retrieves the pure resource.
+     */
+    T getResource();
 }
