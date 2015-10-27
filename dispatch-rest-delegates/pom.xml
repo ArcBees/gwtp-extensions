@@ -27,6 +27,7 @@
         <maven-checkstyle-plugin.version>2.13</maven-checkstyle-plugin.version>
         <checkstyle.version>6.2</checkstyle.version>
         <arcbees-checkstyle.version>1.2</arcbees-checkstyle.version>
+        <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
 
         <target.jdk>1.6</target.jdk>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -155,6 +156,23 @@
                         <goals>
                             <goal>checkstyle</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
