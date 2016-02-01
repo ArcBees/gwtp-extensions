@@ -52,7 +52,7 @@ public abstract class AbstractResourceDelegate<T> implements ResourceDelegate<T>
         AbstractResourceDelegate<T> delegate = createCopy();
         delegate.delegatingDispatchRequest = delegatingDispatchRequest;
 
-        return this;
+        return delegate;
     }
 
     @Override

@@ -4,5 +4,5 @@
 
 Eventually this will be packaged as a jar for now run:
 ```
-  mvn exec:java
+  mvn package exec:java
 ```
