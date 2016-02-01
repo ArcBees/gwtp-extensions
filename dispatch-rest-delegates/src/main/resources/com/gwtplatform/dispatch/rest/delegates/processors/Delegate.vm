@@ -28,6 +28,11 @@ public class $impl.simpleName extends AbstractResourceDelegate<$resourceType.par
 $method.code
 #end
     @Override
+    public $resourceType.parameterizedName getResource() {
+        return resource;
+    }
+
+    @Override
     protected $resourceType.parameterizedName asResource() {
         return this;
     }
