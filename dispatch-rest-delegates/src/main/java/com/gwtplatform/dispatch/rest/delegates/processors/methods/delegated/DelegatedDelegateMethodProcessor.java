@@ -39,7 +39,7 @@ public class DelegatedDelegateMethodProcessor extends DispatchRestContextProcess
     public CodeSnippet process(DelegateMethod context) {
         DelegatedDelegateMethod method = (DelegatedDelegateMethod) context;
 
-        return outputter.withTemplateFile(TEMPLATE)
+        return outputter.configure(TEMPLATE)
                 .withParam("methodSuffix", METHOD_SUFFIX)
                 .withParam("method", method.getMethod())
                 .withParam("defaultReturnValue", method.getDefaultReturnValue())

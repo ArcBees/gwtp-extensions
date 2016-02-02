@@ -62,7 +62,7 @@ public class DelegateResourceMethodProcessor extends DispatchRestContextProcesso
 
         logger.debug("Generating end-point method delegate `%s`.", methodName);
 
-        CodeSnippet code = outputter.withTemplateFile(TEMPLATE)
+        CodeSnippet code = outputter.configure(TEMPLATE)
                 .withParam("methodSuffix", METHOD_SUFFIX)
                 .withParam("method", delegateMethod.getMethod())
                 .withParam("defaultReturnValue", delegateMethod.getDefaultReturnValue())

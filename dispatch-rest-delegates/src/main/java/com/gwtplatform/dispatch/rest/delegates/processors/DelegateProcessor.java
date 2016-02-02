@@ -34,7 +34,7 @@ import com.gwtplatform.processors.tools.outputter.CodeSnippet;
 import com.gwtplatform.processors.tools.outputter.Outputter;
 import com.gwtplatform.processors.tools.utils.Utils;
 
-import static com.gwtplatform.dispatch.rest.processors.NameUtils.REST_GIN_MODULE;
+import static com.gwtplatform.dispatch.rest.processors.NameUtils.findRestModuleType;
 
 public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> {
     private static final String TEMPLATE = "com/gwtplatform/dispatch/rest/delegates/processors/Delegate.vm";
@@ -67,7 +67,7 @@ public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> 
         Type type = delegate.getType();
         List<CodeSnippet> processedMethods = delegateMethodProcessors.processAll(delegate.getMethods());
 
-        outputter.withTemplateFile(TEMPLATE)
+        outputter.configure(TEMPLATE)
                 .withParam("isRootResource", delegate.isRootResource())
                 .withParam("resourceType", delegate.getResourceType())
                 .withParam("methods", processedMethods)
@@ -82,7 +82,7 @@ public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> 
         if (delegate.isRootResource()) {
             Type superType = new Type(ResourceDelegate.class, Arrays.asList(delegate.getResourceType()));
             BindingContext bindingContext =
-                    new BindingContext(REST_GIN_MODULE, delegate.getType(), superType, Singleton.class);
+                    new BindingContext(findRestModuleType(utils), delegate.getType(), superType, Singleton.class);
 
             bindingsProcessors.process(bindingContext);
         }

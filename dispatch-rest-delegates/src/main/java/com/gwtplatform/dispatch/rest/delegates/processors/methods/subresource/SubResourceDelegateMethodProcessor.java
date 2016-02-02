@@ -37,7 +37,7 @@ public class SubResourceDelegateMethodProcessor extends DispatchRestContextProce
     public CodeSnippet process(DelegateMethod context) {
         SubResourceDelegateMethod method = (SubResourceDelegateMethod) context;
 
-        return outputter.withTemplateFile(TEMPLATE)
+        return outputter.configure(TEMPLATE)
                 .withParam("method", method.getMethod())
                 .withParam("subDelegateType", method.getSubDelegateType())
                 .parse();

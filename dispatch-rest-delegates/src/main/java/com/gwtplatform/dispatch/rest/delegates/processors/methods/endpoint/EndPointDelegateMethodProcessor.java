@@ -37,7 +37,7 @@ public class EndPointDelegateMethodProcessor extends DispatchRestContextProcesso
     public CodeSnippet process(DelegateMethod context) {
         EndPointDelegateMethod method = (EndPointDelegateMethod) context;
 
-        return outputter.withTemplateFile(TEMPLATE)
+        return outputter.configure(TEMPLATE)
                 .withParam("method", method.getMethod())
                 .parse();
     }
