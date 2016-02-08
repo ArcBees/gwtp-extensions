@@ -20,6 +20,7 @@
     <properties>
         <gwtp.version>1.6-SNAPSHOT</gwtp.version>
         <gwt.version>2.7.0</gwt.version>
+        <auto-service.version>1.0-rc2</auto-service.version>
         <mockito.version>1.10.8</mockito.version>
         <junit.version>4.12</junit.version>
 
@@ -74,6 +75,13 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
             <version>${gwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <version>${auto-service.version}</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- For testing tools -->
