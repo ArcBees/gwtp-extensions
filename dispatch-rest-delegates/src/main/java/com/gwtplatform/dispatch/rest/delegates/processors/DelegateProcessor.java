@@ -35,6 +35,7 @@ import com.gwtplatform.processors.tools.outputter.Outputter;
 import com.gwtplatform.processors.tools.utils.Utils;
 
 import static com.gwtplatform.dispatch.rest.processors.NameUtils.findRestModuleType;
+import static com.gwtplatform.processors.tools.bindings.BindingContext.newBinding;
 
 public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> {
     private static final String TEMPLATE = "com/gwtplatform/dispatch/rest/delegates/processors/Delegate.vm";
@@ -82,7 +83,7 @@ public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> 
         if (delegate.isRootResource()) {
             Type superType = new Type(ResourceDelegate.class, Arrays.asList(delegate.getResourceType()));
             BindingContext bindingContext =
-                    new BindingContext(findRestModuleType(utils), delegate.getType(), superType, Singleton.class);
+                    newBinding(findRestModuleType(utils), superType, delegate.getType(), Singleton.class);
 
             bindingsProcessors.process(bindingContext);
         }
