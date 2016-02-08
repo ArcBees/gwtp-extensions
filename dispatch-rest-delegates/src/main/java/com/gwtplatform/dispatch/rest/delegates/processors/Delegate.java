@@ -97,7 +97,6 @@ public class Delegate implements HasType, HasImports {
     }
 
     public List<Delegate> getSubDelegates() {
-        // TODO: Let SubResourceDelegateMethod + Processor this model
         if (subDelegates == null) {
             processSubResources();
         }
