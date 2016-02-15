@@ -7,6 +7,6 @@
 
     $endPointType.parameterizedName ${method.name}${methodSuffix}(#printParameterDefinitions(3 $method.parameters)) {
         return new ${endPointType.parameterizedName}(
-                httpParameterFactory,
+                urlUtils,
                 defaultDateFormat#appendParameterNames(4 $endPointArguments));
     }
