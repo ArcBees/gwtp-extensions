@@ -22,12 +22,12 @@ import javax.lang.model.element.ExecutableElement;
 
 import com.google.common.base.Optional;
 import com.gwtplatform.dispatch.rest.processors.details.EndPointDetails;
-import com.gwtplatform.dispatch.rest.processors.details.Method;
 import com.gwtplatform.dispatch.rest.processors.endpoint.EndPoint;
 import com.gwtplatform.dispatch.rest.processors.endpoint.EndPointMethod;
 import com.gwtplatform.dispatch.rest.processors.endpoint.EndPointMethodFactory;
 import com.gwtplatform.dispatch.rest.processors.resource.Resource;
 import com.gwtplatform.dispatch.rest.processors.resource.ResourceMethod;
+import com.gwtplatform.processors.tools.domain.Method;
 import com.gwtplatform.processors.tools.utils.Primitives;
 
 import static com.gwtplatform.processors.tools.utils.Primitives.VOID;

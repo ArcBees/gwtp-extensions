@@ -19,8 +19,8 @@ package com.gwtplatform.dispatch.rest.delegates.processors.methods.endpoint;
 import java.util.Collection;
 
 import com.gwtplatform.dispatch.rest.delegates.processors.methods.DelegateMethod;
-import com.gwtplatform.dispatch.rest.processors.details.Method;
 import com.gwtplatform.dispatch.rest.processors.endpoint.EndPointMethod;
+import com.gwtplatform.processors.tools.domain.Method;
 
 public class EndPointDelegateMethod implements DelegateMethod {
     private final EndPointMethod method;

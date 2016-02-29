@@ -20,7 +20,7 @@ import java.util.Collection;
 
 import com.gwtplatform.dispatch.rest.delegates.processors.DelegateResourceMethod;
 import com.gwtplatform.dispatch.rest.delegates.processors.methods.DelegateMethod;
-import com.gwtplatform.dispatch.rest.processors.details.Method;
+import com.gwtplatform.processors.tools.domain.Method;
 import com.gwtplatform.processors.tools.domain.Type;
 
 public class DelegatedDelegateMethod implements DelegateMethod {

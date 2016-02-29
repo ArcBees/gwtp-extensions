@@ -19,8 +19,8 @@ package com.gwtplatform.dispatch.rest.delegates.processors.methods.subresource;
 import java.util.Collection;
 
 import com.gwtplatform.dispatch.rest.delegates.processors.methods.DelegateMethod;
-import com.gwtplatform.dispatch.rest.processors.details.Method;
 import com.gwtplatform.dispatch.rest.processors.subresource.SubResourceMethod;
+import com.gwtplatform.processors.tools.domain.Method;
 import com.gwtplatform.processors.tools.domain.Type;
 
 import static com.gwtplatform.dispatch.rest.delegates.processors.Delegate.DELEGATE_SUFFIX;
