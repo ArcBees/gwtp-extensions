@@ -67,9 +67,10 @@ public class DelegateMocking<R> {
                 : "useResource(R) called more than once. Did you forget to call DelegateTestUtils.init()?";
 
         this.resource = resource;
-        callbackCaptor = ArgumentCaptor.forClass(AsyncCallback.class);
-        delegatingDispatchRequestCaptor = ArgumentCaptor.forClass(DelegatingDispatchRequest.class);
+        this.callbackCaptor = ArgumentCaptor.forClass(AsyncCallback.class);
+        this.delegatingDispatchRequestCaptor = ArgumentCaptor.forClass(DelegatingDispatchRequest.class);
 
+        when(delegate.withoutCallback()).thenReturn(resource);
         when(delegate.withCallback(callbackCaptor.capture())).thenReturn(resource);
         when(delegate.withDelegatingDispatchRequest(delegatingDispatchRequestCaptor.capture())).thenReturn(delegate);
 

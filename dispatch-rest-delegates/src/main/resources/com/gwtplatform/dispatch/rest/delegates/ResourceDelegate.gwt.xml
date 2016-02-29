@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.6.1//EN"
-        "https://raw.githubusercontent.com/gwtproject/gwt/2.6.1/distro-source/core/src/gwt-module.dtd">
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.7.0//EN"
+        "http://gwtproject.org/doctype/2.7.0/gwt-module.dtd">
 <module>
     <inherits name="com.gwtplatform.dispatch.rest.DispatchRest"/>
 
-    <extend-configuration-property name="gwtp.dispatch.rest.generatorModules"
-            value="com.gwtplatform.dispatch.rest.delegates.rebind.DelegateModule"/>
-
-    <generate-with class="com.gwtplatform.dispatch.rest.delegates.rebind.fallback.ResourceDelegateFallbackGenerator">
-        <when-type-assignable class="com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate"/>
-    </generate-with>
+    <source path="client"/>
 </module>

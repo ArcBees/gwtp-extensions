@@ -1,0 +1,30 @@
+#* @implicitly included *#
+
+#* @vtlmacrolibrary path="com/gwtplatform/processors/tools/macros.vm" *#
+#* @vtlmacrolibrary path="com/gwtplatform/dispatch/rest/processors/macros.vm" *#
+#* @velocityproperties path=com/gwtplatform/dispatch/rest/processors/velocity.properties *#
+
+#* @vtlvariable name="impl" type="com.gwtplatform.processors.tools.domain.Type" *#
+#* @vtlvariable name="processor" type="com.gwtplatform.processors.tools.domain.Type" *#
+#* @vtlvariable name="processingDate" type="java.lang.String" *#
+#* @vtlvariable name="imports" type="java.util.Collection<java.lang.String>" *#
+
+#* @vtlvariable name="methodSuffix" type="java.lang.String" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegateMethod.vm" *#
+#* @vtlvariable name="method" type="com.gwtplatform.dispatch.rest.processors.details.Method" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegateMethod.vm" *#
+#* @vtlvariable name="endPointType" type="com.gwtplatform.processors.tools.domain.Type" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegateMethod.vm" *#
+#* @vtlvariable name="endPointArguments" type="java.util.List<com.gwtplatform.dispatch.rest.processors.details.Variable>" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegateMethod.vm" *#
+#* @vtlvariable name="defaultReturnValue" type="java.lang.String" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegateMethod.vm" *#
+
+#* @vtlvariable name="method" type="com.gwtplatform.dispatch.rest.processors.details.Method" file="com/gwtplatform/dispatch/rest/delegates/processors/EndPointDelegateMethod.vm" *#
+
+#* @vtlvariable name="methodSuffix" type="java.lang.String" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegatedDelegateMethod.vm" *#
+#* @vtlvariable name="method" type="com.gwtplatform.dispatch.rest.processors.details.Method" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegatedDelegateMethod.vm" *#
+#* @vtlvariable name="defaultReturnValue" type="java.lang.String" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegatedDelegateMethod.vm" *#
+#* @vtlvariable name="resourceImplType" type="com.gwtplatform.processors.tools.domain.Type" file="com/gwtplatform/dispatch/rest/delegates/processors/DelegatedDelegateMethod.vm" *#
+
+#* @vtlvariable name="method" type="com.gwtplatform.dispatch.rest.processors.details.Method" file="com/gwtplatform/dispatch/rest/delegates/processors/SubResourceDelegateMethod.vm" *#
+#* @vtlvariable name="subDelegateType" type="com.gwtplatform.processors.tools.domain.Type" file="com/gwtplatform/dispatch/rest/delegates/processors/SubResourceDelegateMethod.vm" *#
+
+#* @vtlvariable name="resourceType" type="com.gwtplatform.processors.tools.domain.Type" file="com/gwtplatform/dispatch/rest/delegates/processors/Delegate.vm" *#
+#* @vtlvariable name="methods" type="java.util.List<com.gwtplatform.processors.tools.outputter.CodeSnippet>" file="com/gwtplatform/dispatch/rest/delegates/processors/Delegate.vm" *#
+#* @vtlvariable name="isRootResource" type="boolean" file="com/gwtplatform/dispatch/rest/delegates/processors/Delegate.vm" *#

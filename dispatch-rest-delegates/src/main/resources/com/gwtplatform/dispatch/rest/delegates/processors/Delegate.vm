@@ -1,0 +1,44 @@
+package $impl.packageName;
+
+import javax.annotation.Generated;
+#if($isRootResource)import javax.inject.Inject;#end
+
+import com.gwtplatform.dispatch.rest.client.RestDispatch;
+import com.gwtplatform.dispatch.rest.delegates.client.AbstractResourceDelegate;
+
+#printImports($imports)
+
+@Generated(value = "$processor.qualifiedName", date = "$processingDate")
+public class $impl.simpleName extends AbstractResourceDelegate<$resourceType.parameterizedName>
+        implements $resourceType {
+    private final $resourceType.parameterizedName resource;
+
+#if($isRootResource)
+    @Inject
+#end
+    public ${impl.simpleName}(
+            RestDispatch dispatcher,
+            $resourceType.parameterizedName resource) {
+        super(dispatcher);
+
+        this.resource = resource;
+    }
+
+#foreach ($method in $methods)
+$method.code
+#end
+    @Override
+    public $resourceType.parameterizedName getResource() {
+        return resource;
+    }
+
+    @Override
+    protected $resourceType.parameterizedName asResource() {
+        return this;
+    }
+
+    @Override
+    protected $impl.parameterizedName newInstance() {
+        return new ${impl.parameterizedName}(dispatcher, resource);
+    }
+}

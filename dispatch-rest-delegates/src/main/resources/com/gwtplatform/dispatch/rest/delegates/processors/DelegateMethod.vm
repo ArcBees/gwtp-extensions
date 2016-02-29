@@ -1,0 +1,12 @@
+    @Override
+    public $method.returnType.parameterizedName ${method.name}(#printParameterDefinitions(3 $method.parameters)) {
+#if($defaultReturnValue)
+        return $defaultReturnValue;
+#end
+    }
+
+    $endPointType.parameterizedName ${method.name}${methodSuffix}(#printParameterDefinitions(3 $method.parameters)) {
+        return new ${endPointType.parameterizedName}(
+                urlUtils,
+                defaultDateFormat#appendParameterNames(4 $endPointArguments));
+    }
