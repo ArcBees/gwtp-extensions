@@ -16,8 +16,8 @@
 
 package com.gwtplatform.dispatch.rest.delegates.processors.methods;
 
-import com.gwtplatform.dispatch.rest.processors.details.Method;
 import com.gwtplatform.processors.tools.domain.HasImports;
+import com.gwtplatform.processors.tools.domain.Method;
 
 public interface DelegateMethod extends HasImports {
     Method getMethod();
