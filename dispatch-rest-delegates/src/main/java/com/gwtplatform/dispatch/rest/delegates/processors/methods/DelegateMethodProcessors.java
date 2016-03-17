@@ -52,12 +52,7 @@ public class DelegateMethodProcessors {
 
     public List<CodeSnippet> processAll(List<DelegateMethod> methods) {
         return FluentIterable.from(methods)
-                .transform(new Function<DelegateMethod, CodeSnippet>() {
-                    @Override
-                    public CodeSnippet apply(DelegateMethod resourceMethod) {
-                        return process(resourceMethod);
-                    }
-                })
+                .transform(this::process)
                 .toList();
     }
 

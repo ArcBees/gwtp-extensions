@@ -20,7 +20,7 @@
 
     <properties>
         <gwtp.version>2.0-SNAPSHOT</gwtp.version>
-        <gwt.version>2.7.0</gwt.version>
+        <gwt.version>2.8.0-SNAPSHOT</gwt.version>
         <auto-service.version>1.0-rc2</auto-service.version>
         <mockito.version>1.10.8</mockito.version>
         <junit.version>4.12</junit.version>
@@ -31,7 +31,7 @@
         <arcbees-checkstyle.version>1.2</arcbees-checkstyle.version>
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
 
-        <target.jdk>1.7</target.jdk>
+        <target.jdk>1.8</target.jdk>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

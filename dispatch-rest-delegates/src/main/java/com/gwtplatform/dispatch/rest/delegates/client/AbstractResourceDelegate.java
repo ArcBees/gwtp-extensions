@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 ArcBees Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,8 +16,8 @@
 
 package com.gwtplatform.dispatch.rest.delegates.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtplatform.dispatch.client.DelegatingDispatchRequest;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.dispatch.rest.client.RestDispatch;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 import com.gwtplatform.dispatch.shared.DispatchRequest;
@@ -28,19 +28,12 @@ import com.gwtplatform.dispatch.shared.DispatchRequest;
  * @param <T> The resource used by this delegate.
  */
 public abstract class AbstractResourceDelegate<T> implements ResourceDelegate<T>, Cloneable {
-    private static final AsyncCallback<Object> NO_OP_CALLBACK = new AsyncCallback<Object>() {
-        @Override
-        public void onFailure(Throwable caught) {
-        }
-
-        @Override
-        public void onSuccess(Object result) {
-        }
+    private static final RestCallback<Object> NO_OP_CALLBACK = (result, response) -> {
     };
 
     protected final RestDispatch dispatcher;
 
-    protected AsyncCallback<?> callback;
+    protected RestCallback<?> callback;
     protected DelegatingDispatchRequest delegatingDispatchRequest;
 
     protected AbstractResourceDelegate(RestDispatch dispatcher) {
@@ -61,7 +54,7 @@ public abstract class AbstractResourceDelegate<T> implements ResourceDelegate<T>
     }
 
     @Override
-    public T withCallback(AsyncCallback<?> callback) {
+    public T withCallback(RestCallback<?> callback) {
         AbstractResourceDelegate<T> delegate = createCopy();
         delegate.callback = callback;
 
@@ -70,7 +63,7 @@ public abstract class AbstractResourceDelegate<T> implements ResourceDelegate<T>
 
     @SuppressWarnings({"unchecked"})
     protected <R> RestAction<R> execute(RestAction<R> action) {
-        DispatchRequest dispatchRequest = dispatcher.execute(action, (AsyncCallback<R>) callback);
+        DispatchRequest dispatchRequest = dispatcher.execute(action, (RestCallback<R>) callback);
 
         if (delegatingDispatchRequest != null) {
             delegatingDispatchRequest.setDelegate(dispatchRequest);

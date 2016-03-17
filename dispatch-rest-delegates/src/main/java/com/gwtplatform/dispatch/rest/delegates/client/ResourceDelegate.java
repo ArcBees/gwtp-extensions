@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 ArcBees Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,8 +16,8 @@
 
 package com.gwtplatform.dispatch.rest.delegates.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtplatform.dispatch.client.DelegatingDispatchRequest;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.dispatch.shared.DispatchRequest;
 
 /**
@@ -28,7 +28,7 @@ import com.gwtplatform.dispatch.shared.DispatchRequest;
  * <p/>
  * This delegate will not send the HTTP request until you call a method, that is not a sub-resource, from the underlying
  * resource. The underlying resource is returned when either {@link #withoutCallback()} or {@link
- * #withCallback(AsyncCallback)} are called.
+ * #withCallback(RestCallback)} are called.
  * <p/>
  * The following example shows how to retrieve the {@link DispatchRequest} and delete a potential car:
  * <pre><code>
@@ -84,10 +84,10 @@ public interface ResourceDelegate<T> {
      *
      * @return the service wrapped by this delegate.
      */
-    T withCallback(AsyncCallback<?> callback);
+    T withCallback(RestCallback<?> callback);
 
     /**
-     * This method is the same as colling {@link #withCallback(AsyncCallback)} with a no-op callback.
+     * This method is the same as calling {@link #withCallback(RestCallback)} with a no-op callback.
      */
     T withoutCallback();
 

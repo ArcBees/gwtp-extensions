@@ -33,7 +33,7 @@ import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
  */
 public class DelegateTestUtils {
     public static final Map<ResourceDelegate<?>, DelegateMocking<?>> delegateMockings
-            = Collections.synchronizedMap(new HashMap<ResourceDelegate<?>, DelegateMocking<?>>());
+            = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Initializes the mocking utils. <b>Must</b> be called before each test.
@@ -54,7 +54,7 @@ public class DelegateTestUtils {
         if (delegateMockings.containsKey(delegate)) {
             delegateMocking = (DelegateMocking<R>) delegateMockings.get(delegate);
         } else {
-            delegateMocking = new DelegateMocking<R>(delegate);
+            delegateMocking = new DelegateMocking<>(delegate);
             delegateMockings.put(delegate, delegateMocking);
         }
 

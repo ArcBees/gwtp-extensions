@@ -17,6 +17,7 @@
 package com.gwtplatform.dispatch.rest.delegates.test;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 
 /**
  * Stubbing context for a {@link com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate ResourceDelegate} call
@@ -46,8 +47,8 @@ public class SuccessDelegateStubber<R> extends AbstractDelegateStubber<R, Succes
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void updateCallback(AsyncCallback callback) {
-        callback.onSuccess(result);
+    protected void updateCallback(RestCallback callback) {
+        callback.onSuccess(result, getResponse());
     }
 
     @Override

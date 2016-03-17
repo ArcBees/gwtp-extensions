@@ -90,8 +90,6 @@ public class DelegateProcessor extends AbstractContextProcessor<Delegate, Void> 
     }
 
     private void processSubDelegates(Delegate delegate) {
-        for (Delegate subDelegate : delegate.getSubDelegates()) {
-            process(subDelegate);
-        }
+        delegate.getSubDelegates().forEach(this::process);
     }
 }
