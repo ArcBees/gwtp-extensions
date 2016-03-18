@@ -19,7 +19,6 @@ package com.gwtplatform.dispatch.rest.delegates.processors.methods;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.gwtplatform.processors.tools.exceptions.UnableToProcessException;
 import com.gwtplatform.processors.tools.logger.Logger;

@@ -18,9 +18,6 @@ package com.gwtplatform.dispatch.rest.delegates.test;
 
 import javax.ws.rs.core.Response.Status;
 
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import com.google.gwt.http.client.Response;
 import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.dispatch.shared.DispatchRequest;
