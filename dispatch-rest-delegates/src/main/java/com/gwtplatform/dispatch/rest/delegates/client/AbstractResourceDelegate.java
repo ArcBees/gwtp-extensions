@@ -17,51 +17,79 @@
 package com.gwtplatform.dispatch.rest.delegates.client;
 
 import com.gwtplatform.dispatch.client.DelegatingDispatchRequest;
+import com.gwtplatform.dispatch.rest.client.AlwaysCallback;
+import com.gwtplatform.dispatch.rest.client.FailureCallback;
 import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.dispatch.rest.client.RestDispatch;
+import com.gwtplatform.dispatch.rest.client.SuccessCallback;
 import com.gwtplatform.dispatch.rest.shared.RestAction;
 import com.gwtplatform.dispatch.shared.DispatchRequest;
 
 /**
  * Common code used by generated implementations of {@link ResourceDelegate}.
  *
- * @param <T> The resource used by this delegate.
+ * @param <R> The resource used by this delegate.
  */
-public abstract class AbstractResourceDelegate<T> implements ResourceDelegate<T>, Cloneable {
-    private static final RestCallback<Object> NO_OP_CALLBACK = (result, response) -> {
-    };
-
+public abstract class AbstractResourceDelegate<R>
+        implements ResourceDelegate<R>, Cloneable {
     protected final RestDispatch dispatcher;
 
     protected RestCallback<?> callback;
     protected DelegatingDispatchRequest delegatingDispatchRequest;
+    protected SuccessCallback<?> successCallback;
+    protected AlwaysCallback alwaysCallback;
+    protected FailureCallback failureCallback;
 
     protected AbstractResourceDelegate(RestDispatch dispatcher) {
         this.dispatcher = dispatcher;
     }
 
     @Override
-    public ResourceDelegate<T> withDelegatingDispatchRequest(DelegatingDispatchRequest delegatingDispatchRequest) {
-        AbstractResourceDelegate<T> delegate = createCopy();
+    public ResourceDelegate<R> withDelegatingDispatchRequest(DelegatingDispatchRequest delegatingDispatchRequest) {
+        AbstractResourceDelegate<R> delegate = createCopy();
         delegate.delegatingDispatchRequest = delegatingDispatchRequest;
 
         return delegate;
     }
 
     @Override
-    public T withoutCallback() {
-        return withCallback(NO_OP_CALLBACK);
-    }
-
-    @Override
-    public T withCallback(RestCallback<?> callback) {
-        AbstractResourceDelegate<T> delegate = createCopy();
+    public <T> R withCallback(RestCallback<T> callback) {
+        AbstractResourceDelegate<R> delegate = createCopy();
         delegate.callback = callback;
 
         return delegate.asResource();
     }
 
-    @SuppressWarnings({"unchecked"})
+    @Override
+    public <T> ResourceDelegate<R> success(SuccessCallback<T> successCallback) {
+        AbstractResourceDelegate<R> delegate = createCopy();
+        delegate.successCallback = successCallback;
+
+        return delegate;
+    }
+
+    @Override
+    public ResourceDelegate<R> always(AlwaysCallback alwaysCallback) {
+        AbstractResourceDelegate<R> delegate = createCopy();
+        delegate.alwaysCallback = alwaysCallback;
+
+        return delegate;
+    }
+
+    @Override
+    public ResourceDelegate<R> failure(FailureCallback failureCallback) {
+        AbstractResourceDelegate<R> delegate = createCopy();
+        delegate.failureCallback = failureCallback;
+
+        return delegate;
+    }
+
+    @Override
+    public R call() {
+        callback = wrapCallbacks();
+        return asResource();
+    }
+
     protected <R> RestAction<R> execute(RestAction<R> action) {
         DispatchRequest dispatchRequest = dispatcher.execute(action, (RestCallback<R>) callback);
 
@@ -75,16 +103,23 @@ public abstract class AbstractResourceDelegate<T> implements ResourceDelegate<T>
     protected void copyFields(AbstractResourceDelegate<?> delegate) {
         delegate.delegatingDispatchRequest = delegatingDispatchRequest;
         delegate.callback = callback;
+        delegate.successCallback = successCallback;
+        delegate.alwaysCallback = alwaysCallback;
+        delegate.failureCallback = failureCallback;
     }
 
-    protected abstract AbstractResourceDelegate<T> newInstance();
+    protected abstract AbstractResourceDelegate<R> newInstance();
 
-    protected abstract T asResource();
+    protected abstract R asResource();
 
-    private AbstractResourceDelegate<T> createCopy() {
-        AbstractResourceDelegate<T> delegate = newInstance();
+    private AbstractResourceDelegate<R> createCopy() {
+        AbstractResourceDelegate<R> delegate = newInstance();
         copyFields(delegate);
 
         return delegate;
+    }
+
+    private RestCallback<?> wrapCallbacks() {
+        return new RestCallbackWrapper(successCallback, alwaysCallback, failureCallback);
     }
 }

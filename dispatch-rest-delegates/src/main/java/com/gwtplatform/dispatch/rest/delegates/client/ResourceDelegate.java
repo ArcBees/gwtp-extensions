@@ -17,7 +17,10 @@
 package com.gwtplatform.dispatch.rest.delegates.client;
 
 import com.gwtplatform.dispatch.client.DelegatingDispatchRequest;
+import com.gwtplatform.dispatch.rest.client.AlwaysCallback;
+import com.gwtplatform.dispatch.rest.client.FailureCallback;
 import com.gwtplatform.dispatch.rest.client.RestCallback;
+import com.gwtplatform.dispatch.rest.client.SuccessCallback;
 import com.gwtplatform.dispatch.shared.DispatchRequest;
 
 /**
@@ -63,36 +66,58 @@ import com.gwtplatform.dispatch.shared.DispatchRequest;
  * }
  * </code></pre>
  *
- * @param <T> The type of the resource used by this delegate.
+ * @param <R> The type of the resource used by this delegate.
  */
-public interface ResourceDelegate<T> {
+public interface ResourceDelegate<R> {
     /**
      * Used as a mean to access the {@link DispatchRequest} instance returned by the underlying HTTP call. This may be
      * useful for canceling a long running call. {@code delegatingDispatchRequest} will be populated when the HTTP call
      * is sent, that is when you call any method from the service used by this delegate.
      *
      * @param delegatingDispatchRequest the {@link DelegatingDispatchRequest} to populate when the HTTP call is sent.
-     *
      * @return a copy of this {@link ResourceDelegate} using the provided {@link DelegatingDispatchRequest}.
      */
-    ResourceDelegate<T> withDelegatingDispatchRequest(DelegatingDispatchRequest delegatingDispatchRequest);
+    ResourceDelegate<R> withDelegatingDispatchRequest(DelegatingDispatchRequest delegatingDispatchRequest);
 
     /**
      * Provide the callback when the HTTP call returns or if any error occur.
      *
      * @param callback The callback to use when the HTTP call returns or if any error occur.
-     *
      * @return the service wrapped by this delegate.
      */
-    T withCallback(RestCallback<?> callback);
+    <T> R withCallback(RestCallback<T> callback);
 
     /**
-     * This method is the same as calling {@link #withCallback(RestCallback)} with a no-op callback.
+     * Provide the success callback when the HTTP call succesfully returns.
+     *
+     * @param callback The success callback when the HTTP call succesfully returns.
+     * @return this resource delegate.
      */
-    T withoutCallback();
+    <T> ResourceDelegate<R> success(SuccessCallback<T> successCallback);
+
+    /**
+     * Provide a callback that is always executed when a Response is received.
+     *
+     * @param callback The callback to use when the HTTP Response is received.
+     * @return this resource delegate.
+     */
+    ResourceDelegate<R> always(AlwaysCallback alwaysCallback);
+
+    /**
+     * Provide the failure callback when the HTTP call fails.
+     *
+     * @param callback The failure callback when the HTTP call fails.
+     * @return this resource delegate.
+     */
+    ResourceDelegate<R> failure(FailureCallback successCallback);
+
+    /**
+     * Returns the resource configured by this delegate.
+     */
+    R call();
 
     /**
      * Retrieves the pure resource.
      */
-    T getResource();
+    R getResource();
 }

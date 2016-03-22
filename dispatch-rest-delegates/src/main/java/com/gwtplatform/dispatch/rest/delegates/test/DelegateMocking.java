@@ -69,7 +69,7 @@ public class DelegateMocking<R> {
         this.callbackCaptor = ArgumentCaptor.forClass(RestCallback.class);
         this.delegatingDispatchRequestCaptor = ArgumentCaptor.forClass(DelegatingDispatchRequest.class);
 
-        when(delegate.withoutCallback()).thenReturn(resource);
+        when(delegate.call()).thenReturn(resource);
         when(delegate.withCallback(callbackCaptor.capture())).thenReturn(resource);
         when(delegate.withDelegatingDispatchRequest(delegatingDispatchRequestCaptor.capture())).thenReturn(delegate);
 

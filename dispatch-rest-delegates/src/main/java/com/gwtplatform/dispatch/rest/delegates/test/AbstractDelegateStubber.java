@@ -141,7 +141,7 @@ public abstract class AbstractDelegateStubber<R, S extends AbstractDelegateStubb
 
     private void updateResponse() {
         if (response != null) {
-            delegateMocking.getCallback().setResponse(response);
+            delegateMocking.getCallback().always(response);
         }
     }
 
