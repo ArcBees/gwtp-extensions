@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 ArcBees Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
 package com.gwtplatform.dispatch.rest.delegates.test;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 
 /**
  * Stubbing context for a {@link com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate ResourceDelegate} call
@@ -45,8 +46,8 @@ public class FailureDelegateStubber<R> extends AbstractDelegateStubber<R, Failur
     }
 
     @Override
-    protected void updateCallback(AsyncCallback callback) {
-        callback.onFailure(throwable);
+    protected void updateCallback(RestCallback callback) {
+        callback.onFailure(throwable, getResponse());
     }
 
     @Override

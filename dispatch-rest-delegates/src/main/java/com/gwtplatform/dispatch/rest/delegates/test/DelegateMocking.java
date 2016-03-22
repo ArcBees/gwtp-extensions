@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 ArcBees Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,7 +18,6 @@ package com.gwtplatform.dispatch.rest.delegates.test;
 
 import org.mockito.ArgumentCaptor;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtplatform.dispatch.client.DelegatingDispatchRequest;
 import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.dispatch.rest.delegates.client.ResourceDelegate;
@@ -35,7 +34,7 @@ public class DelegateMocking<R> {
     private final ResourceDelegate<R> delegate;
 
     private R resource;
-    private ArgumentCaptor<AsyncCallback> callbackCaptor;
+    private ArgumentCaptor<RestCallback> callbackCaptor;
     private ArgumentCaptor<DelegatingDispatchRequest> delegatingDispatchRequestCaptor;
 
     DelegateMocking(ResourceDelegate<R> delegate) {
@@ -67,10 +66,10 @@ public class DelegateMocking<R> {
                 : "useResource(R) called more than once. Did you forget to call DelegateTestUtils.init()?";
 
         this.resource = resource;
-        this.callbackCaptor = ArgumentCaptor.forClass(AsyncCallback.class);
+        this.callbackCaptor = ArgumentCaptor.forClass(RestCallback.class);
         this.delegatingDispatchRequestCaptor = ArgumentCaptor.forClass(DelegatingDispatchRequest.class);
 
-        when(delegate.withoutCallback()).thenReturn(resource);
+        when(delegate.call()).thenReturn(resource);
         when(delegate.withCallback(callbackCaptor.capture())).thenReturn(resource);
         when(delegate.withDelegatingDispatchRequest(delegatingDispatchRequestCaptor.capture())).thenReturn(delegate);
 
@@ -92,7 +91,7 @@ public class DelegateMocking<R> {
     public SuccessDelegateStubber<R> succeed() {
         verifyReadyToStub();
 
-        return new SuccessDelegateStubber<R>(this);
+        return new SuccessDelegateStubber<>(this);
     }
 
     /**
@@ -101,7 +100,7 @@ public class DelegateMocking<R> {
     public FailureDelegateStubber<R> fail() {
         verifyReadyToStub();
 
-        return new FailureDelegateStubber<R>(this);
+        return new FailureDelegateStubber<>(this);
     }
 
     ResourceDelegate<R> getDelegate() {
@@ -116,15 +115,8 @@ public class DelegateMocking<R> {
         return delegatingDispatchRequestCaptor.getValue();
     }
 
-    AsyncCallback getCallback() {
+    RestCallback getCallback() {
         return callbackCaptor.getValue();
-    }
-
-    RestCallback getRestCallback() {
-        AsyncCallback callback = getCallback();
-
-        assert callback instanceof RestCallback;
-        return (RestCallback) callback;
     }
 
     private void verifyReadyToStub() {

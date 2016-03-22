@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2014 ArcBees Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,14 +18,12 @@ package com.gwtplatform.dispatch.rest.delegates.test;
 
 import javax.ws.rs.core.Response.Status;
 
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.dispatch.shared.DispatchRequest;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
@@ -121,25 +119,29 @@ public abstract class AbstractDelegateStubber<R, S extends AbstractDelegateStubb
      * @return The stubbing context of <code>mock</code>.
      */
     public <T> T when(T mock) {
-        return doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                updateResponse();
-                updateDispatchRequest();
-                updateCallback(delegateMocking.getCallback());
+        return doAnswer(invocation -> {
+            updateResponse();
+            updateDispatchRequest();
+            updateCallback(delegateMocking.getCallback());
 
-                return null;
-            }
+            return null;
         }).when(mock);
     }
 
-    protected abstract void updateCallback(AsyncCallback callback);
+    protected Response getResponse() {
+        if (response == null) {
+            response = mock(Response.class, RETURNS_DEEP_STUBS);
+        }
+        return response;
+    }
+
+    protected abstract void updateCallback(RestCallback callback);
 
     protected abstract S self();
 
     private void updateResponse() {
         if (response != null) {
-            delegateMocking.getRestCallback().setResponse(response);
+            delegateMocking.getCallback().always(response);
         }
     }
 
