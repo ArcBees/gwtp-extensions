@@ -22,12 +22,12 @@ import com.gwtplatform.dispatch.rest.client.FailureCallback;
 import com.gwtplatform.dispatch.rest.client.RestCallback;
 import com.gwtplatform.dispatch.rest.client.SuccessCallback;
 
-class RestCallbackWrapper<R> implements RestCallback<R> {
+public class RestCallbackWrapper<R> implements RestCallback<R> {
     private final SuccessCallback<R> successCallback;
     private final AlwaysCallback alwaysCallback;
     private final FailureCallback failureCallback;
 
-    RestCallbackWrapper(
+    public RestCallbackWrapper(
             SuccessCallback<R> successCallback,
             AlwaysCallback alwaysCallback,
             FailureCallback failureCallback) {
