@@ -24,6 +24,12 @@
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
     </properties>
 
+    <scm>
+        <connection>scm:git:git@github.com:ArcBees/gwtp-extensions.git</connection>
+        <developerConnection>scm:git:git@github.com:ArcBees/gwtp-extensions.git</developerConnection>
+        <url>https://github.com/ArcBees/gwtp-extensions</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
