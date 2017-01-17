@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -23,6 +22,12 @@
 
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
     </properties>
+
+    <scm>
+        <connection>scm:git:git@github.com:ArcBees/gwtp-extensions.git</connection>
+        <developerConnection>scm:git:git@github.com:ArcBees/gwtp-extensions.git</developerConnection>
+        <url>https://github.com/ArcBees/gwtp-extensions</url>
+    </scm>
 
     <dependencies>
         <dependency>
