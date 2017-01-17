@@ -9,7 +9,7 @@
 
     <groupId>com.gwtplatform.extensions</groupId>
     <artifactId>ginuibinder</artifactId>
-    <version>2.8.1-SNAPSHOT</version>
+    <version>${gwt.version}-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>GinUiBinder</name>
     <inceptionYear>2014</inceptionYear>
