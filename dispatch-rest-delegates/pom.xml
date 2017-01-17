@@ -20,7 +20,7 @@
 
     <properties>
         <gwtp.version>2.0-SNAPSHOT</gwtp.version>
-        <gwt.version>2.8.0-SNAPSHOT</gwt.version>
+        <gwt.version>2.8.0</gwt.version>
         <auto-service.version>1.0-rc2</auto-service.version>
         <mockito.version>1.10.8</mockito.version>
         <junit.version>4.12</junit.version>
